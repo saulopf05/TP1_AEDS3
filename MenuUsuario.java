@@ -36,7 +36,13 @@ public class MenuUsuario {
                     break;
 
                 case 'B':
-                    System.out.println("\nBuscar perguntas - Em construção...");
+                    try {
+                        MenuPerguntas menuPerguntas = new MenuPerguntas(usuario);
+                        menuPerguntas.menu();
+                    } catch(Exception e) {
+                        System.out.println("\nErro ao acessar o menu de perguntas!");
+                        e.printStackTrace();
+                    }
                     break;
 
                 case 'S':
