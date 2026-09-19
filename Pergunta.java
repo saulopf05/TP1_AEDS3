@@ -100,4 +100,7 @@ public class Pergunta implements Registro {
                "\nNota: " + this.nota +
                (this.ativa ? "" : "\nARQUIVADA");
     }
+    public int getIdUsuario() {
+        return this.idUsuario;
+}
 }
