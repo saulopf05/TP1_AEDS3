@@ -91,7 +91,9 @@ public class MenuUsuario {
                 if (p != null && p.ativa) {
                     Usuario autor = arqUsuarios.read(p.getIdUsuario());
 
-                    System.out.println("\n" + numero + " - " + p.pergunta);
+                    System.out.println("\n(" + numero + ")");
+                    System.out.println(Formato.dataHora(p.criacao));
+                    System.out.println(p.pergunta);
                     System.out.println("Autor: " + (autor != null ? autor.nome : "Desconhecido"));
                     System.out.println("Palavras-chave: " + p.palavrasChave);
 
@@ -139,7 +141,8 @@ public class MenuUsuario {
             System.out.println("Pergunta: " + selecionada.pergunta);
             System.out.println("Palavras-chave: " + selecionada.palavrasChave);
             System.out.println("Nota: " + selecionada.nota);
-            System.out.println("Criada em: " + new java.util.Date(selecionada.criacao));
+            System.out.println("Criada em: " + Formato.dataHora(selecionada.criacao));
+            System.out.println("Alterada em: " + Formato.dataHora(selecionada.alteracao));
             System.out.println("Status: " + (selecionada.ativa ? "Ativa" : "Arquivada"));
 
             char opcaoDetalhe;

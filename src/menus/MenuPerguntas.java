@@ -88,12 +88,13 @@ public class MenuPerguntas {
                     Pergunta p = arqPerguntas.read(par.getIdPergunta());
 
                     if(p != null) {
-                        System.out.println("\n" + numero + " - " + p.pergunta);
+                        // O estado só é mostrado quando a pergunta está
+                        // arquivada; o ID real nunca aparece na tela.
+                        System.out.println("\n(" + numero + ")" +
+                            (p.ativa ? "" : " ARQUIVADA"));
+                        System.out.println(Formato.dataHora(p.criacao));
+                        System.out.println(p.pergunta);
                         System.out.println("Palavras-chave: " + p.palavrasChave);
-
-                        if(!p.ativa) {
-                            System.out.println(" (ARQUIVADA)");
-                        }
 
                         // Guarda o ID real na posição da lista
                         mapPerguntas.add(p.getId());

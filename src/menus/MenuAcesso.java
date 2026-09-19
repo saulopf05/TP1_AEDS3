@@ -48,47 +48,151 @@ public class MenuAcesso {
     }
 
     private void login() {
-        System.out.println("\nLogin");
-        System.out.println("-----");
+        boolean tentarNovamente;
+
+        do {
+            tentarNovamente = false;
+
+            System.out.println("\nLogin");
+            System.out.println("-----");
+
+            try {
+                System.out.print("E-mail (vazio para cancelar): ");
+                String email = console.nextLine();
+
+                if(email.isEmpty())
+                    return;
+
+                System.out.print("Senha: ");
+                String senha = console.nextLine();
+
+                Usuario usuario = arqUsuarios.read(email);
+
+                // O e-mail e a senha são validados de uma só vez, e a mensagem
+                // de erro é a mesma nos dois casos: assim não se revela se o
+                // que está errado é o e-mail ou a senha.
+                if(usuario != null &&
+                   Usuario.gerarHash(senha).equals(usuario.hashSenha)) {
+
+                    System.out.println("\nLogin realizado com sucesso!");
+                    System.out.println("Bem-vindo(a), " + usuario.nome + "!");
+
+                    try {
+                        MenuUsuario menuUsuario = new MenuUsuario(usuario, arqUsuarios);
+                        menuUsuario.menu();
+
+                    } catch(Exception e) {
+                        System.out.println("Erro ao acessar o menu do usuário!");
+                        e.printStackTrace();
+                    }
+
+                    return;
+                }
+
+                System.out.println("\nNome/e-mail ou senha incorretos.");
+                tentarNovamente = falhaNoLogin();
+
+            } catch(Exception e) {
+                System.out.println("Erro do sistema. Não foi possível realizar o login!");
+                e.printStackTrace();
+            }
+
+        } while(tentarNovamente);
+    }
+
+    // Opções oferecidas depois de um login que falhou. Retorna true quando o
+    // usuário quer digitar o e-mail e a senha de novo.
+    private boolean falhaNoLogin() {
+        char opcao;
+
+        do {
+            System.out.println("\nA - Tentar novamente");
+            System.out.println("B - Recuperar senha");
+            System.out.println("R - Retornar");
+            System.out.print("\nOpção: ");
+
+            try {
+                opcao = console.nextLine().toUpperCase().charAt(0);
+            } catch(Exception e) {
+                opcao = ' ';
+            }
+
+            switch(opcao) {
+                case 'A':
+                    return true;
+                case 'B':
+                    // Se a senha foi redefinida, volta direto para o login.
+                    return recuperarSenha();
+                case 'R':
+                    return false;
+                default:
+                    System.out.println("Opção inválida!");
+                    break;
+            }
+
+        } while(true);
+    }
+
+    private boolean recuperarSenha() {
+        System.out.println("\nRecuperar senha");
+        System.out.println("---------------");
 
         try {
             System.out.print("E-mail (vazio para cancelar): ");
             String email = console.nextLine();
 
             if(email.isEmpty())
-                return;
+                return false;
 
             Usuario usuario = arqUsuarios.read(email);
 
             if(usuario == null) {
-                System.out.println("Nome/e-mail ou senha incorretos.");
-                return;
+                System.out.println("\nNão há nenhum usuário cadastrado com este e-mail.");
+                return false;
             }
 
-            System.out.print("Senha: ");
-            String senha = console.nextLine();
-            String hashSenha = Usuario.gerarHash(senha);
+            System.out.println("\nPergunta secreta: " + usuario.perguntaSecreta);
+            System.out.print("Resposta (vazio para cancelar): ");
+            String resposta = console.nextLine();
 
-            if(hashSenha.equals(usuario.hashSenha)) {
-                System.out.println("\nLogin realizado com sucesso!");
-                System.out.println("Bem-vindo(a), " + usuario.nome + "!");
+            if(resposta.isEmpty())
+                return false;
 
-                try {
-                    MenuUsuario menuUsuario = new MenuUsuario(usuario, arqUsuarios);
-                    menuUsuario.menu();
-
-                } catch(Exception e) {
-                    System.out.println("Erro ao acessar o menu do usuário!");
-                    e.printStackTrace();
-                }
-
-            } else {
-                System.out.println("Nome/e-mail ou senha incorretos.");
+            // A comparação é feita sobre o hash da resposta normalizada, então
+            // acentos e letras maiúsculas não impedem a recuperação.
+            if(!Usuario.gerarHashResposta(resposta).equals(usuario.hashRespostaSecreta)) {
+                System.out.println("\nResposta incorreta. Não foi possível recuperar a senha.");
+                return false;
             }
+
+            System.out.print("\nNova senha (vazio para cancelar): ");
+            String novaSenha = console.nextLine();
+
+            if(novaSenha.isEmpty())
+                return false;
+
+            System.out.print("Confirme a nova senha: ");
+            String confirmacao = console.nextLine();
+
+            if(!novaSenha.equals(confirmacao)) {
+                System.out.println("\nAs senhas não conferem.");
+                return false;
+            }
+
+            usuario.hashSenha = Usuario.gerarHash(novaSenha);
+
+            if(arqUsuarios.update(usuario)) {
+                System.out.println("\nSenha alterada com sucesso! Faça o login com a nova senha.");
+                return true;
+            }
+
+            System.out.println("\nNão foi possível alterar a senha.");
+            return false;
 
         } catch(Exception e) {
-            System.out.println("Erro do sistema. Não foi possível realizar o login!");
+            System.out.println("Erro do sistema. Não foi possível recuperar a senha!");
             e.printStackTrace();
+            return false;
         }
     }
 
