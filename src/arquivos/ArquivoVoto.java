@@ -14,7 +14,7 @@ public class ArquivoVoto extends aed3.Arquivo<Voto> {
         indiceUsuarioVoto = new ArvoreBMais<>(
                 ParUsuarioVoto.class.getConstructor(),
                 5,
-                ".\\dados\\votos\\indiceUsuarioVoto.db");
+                "dados/votos/indiceUsuarioVoto.db");
     }
 
     public ArvoreBMais<ParUsuarioVoto> getIndiceUsuarioVoto() {

@@ -15,8 +15,8 @@ public class ArquivoUsuario extends aed3.Arquivo<Usuario> {
         indiceIndiretoEmail = new HashExtensivel<>(
             ParEmailID.class.getConstructor(),
             4,
-            ".\\dados\\usuarios\\indiceEmail.d.db",
-            ".\\dados\\usuarios\\indiceEmail.c.db"
+            "dados/usuarios/indiceEmail.d.db",
+            "dados/usuarios/indiceEmail.c.db"
         );
     }
 

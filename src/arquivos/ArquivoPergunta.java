@@ -14,7 +14,7 @@ public class ArquivoPergunta extends aed3.Arquivo<Pergunta> {
         indiceUsuarioPergunta = new ArvoreBMais<>(
             ParUsuarioPergunta.class.getConstructor(),
             5,
-            ".\\dados\\perguntas\\indiceUsuarioPergunta.db"
+            "dados/perguntas/indiceUsuarioPergunta.db"
         );
     }
 

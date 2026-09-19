@@ -6,7 +6,7 @@ import arquivos.ArquivoUsuario;
 import entidades.Usuario;
 
 public class MenuAcesso {
-    private static Scanner console = new Scanner(System.in);
+    private static Scanner console = Console.entrada();
     ArquivoUsuario arqUsuarios;
 
     public MenuAcesso() throws Exception {

@@ -9,7 +9,7 @@ import entidades.Usuario;
 import indices.ParUsuarioPergunta;
 
 public class MenuPerguntas {
-    private static Scanner console = new Scanner(System.in);
+    private static Scanner console = Console.entrada();
     private Usuario usuario;
     private ArquivoPergunta arqPerguntas;
     

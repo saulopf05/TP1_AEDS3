@@ -14,7 +14,7 @@ import indices.ParPerguntaResposta;
 import indices.ParUsuarioVoto;
 
 public class MenuResposta {
-    private static Scanner console = new Scanner(System.in);
+    private static Scanner console = Console.entrada();
     private Pergunta pergunta;
     private Usuario usuario;
     private ArquivoResposta arqRespostas;

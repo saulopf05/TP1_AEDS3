@@ -16,7 +16,7 @@ import indices.ParUsuarioPergunta;
 import indices.ParUsuarioVoto;
 
 public class MenuUsuario {
-    private static Scanner console = new Scanner(System.in);
+    private static Scanner console = Console.entrada();
     private Usuario usuario;
     private ArquivoUsuario arqUsuarios;
     private ArrayList<Integer> mapPerguntas;
