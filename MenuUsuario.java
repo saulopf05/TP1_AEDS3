@@ -1,13 +1,16 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MenuUsuario {
     private static Scanner console = new Scanner(System.in);
     private Usuario usuario;
     private ArquivoUsuario arqUsuarios;
+    private ArrayList<Integer> mapPerguntas;
 
     public MenuUsuario(Usuario usuario, ArquivoUsuario arqUsuarios) {
         this.usuario = usuario;
         this.arqUsuarios = arqUsuarios;
+        this.mapPerguntas = new ArrayList<>();
     }
 
     public void menu() {
@@ -26,17 +29,17 @@ public class MenuUsuario {
 
             try {
                 opcao = console.nextLine().toUpperCase().charAt(0);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 opcao = ' ';
             }
 
-            switch(opcao) {
+            switch (opcao) {
                 case 'A':
                     minhaArea();
                     break;
 
                 case 'B':
-                    System.out.println("\nBuscar perguntas - Em construção...");
+                    buscarPerguntas();
                     break;
 
                 case 'S':
@@ -47,7 +50,127 @@ public class MenuUsuario {
                     break;
             }
 
-        } while(opcao != 'S');
+        } while (opcao != 'S');
+    }
+
+    private void buscarPerguntas() {
+        try {
+            System.out.println("\nBuscar perguntas");
+            System.out.println("----------------");
+
+            ArquivoPergunta arqPerguntas = new ArquivoPergunta();
+            ArquivoUsuario arqUsuarios = new ArquivoUsuario();
+            mapPerguntas.clear();
+
+            ArrayList<ParUsuarioPergunta> lista = arqPerguntas.getIndiceUsuarioPergunta().read(null);
+
+            if (lista == null || lista.isEmpty()) {
+                System.out.println("\nNenhuma pergunta ativa no fórum.");
+                return;
+            }
+
+            int numero = 1;
+
+            for (ParUsuarioPergunta par : lista) {
+                Pergunta p = arqPerguntas.read(par.getIdPergunta());
+
+                if (p != null && p.ativa) {
+                    Usuario autor = arqUsuarios.read(p.getIdUsuario());
+
+                    System.out.println("\n" + numero + " - " + p.pergunta);
+                    System.out.println("Autor: " + (autor != null ? autor.nome : "Desconhecido"));
+                    System.out.println("Palavras-chave: " + p.palavrasChave);
+
+                    mapPerguntas.add(p.getId());
+                    numero++;
+                }
+            }
+
+            if (mapPerguntas.isEmpty()) {
+                System.out.println("\nNenhuma pergunta ativa no fórum.");
+                return;
+            }
+
+            System.out.print("\nDigite o número da pergunta para ver detalhes (0 para voltar): ");
+            String entrada = console.nextLine();
+
+            if (entrada.isEmpty()) {
+                return;
+            }
+
+            int escolha = Integer.parseInt(entrada);
+
+            if (escolha == 0) {
+                return;
+            }
+
+            if (escolha < 1 || escolha > mapPerguntas.size()) {
+                System.out.println("\nNúmero inválido.");
+                return;
+            }
+
+            int idPergunta = mapPerguntas.get(escolha - 1);
+            Pergunta selecionada = arqPerguntas.read(idPergunta);
+
+            if (selecionada == null) {
+                System.out.println("\nPergunta não encontrada.");
+                return;
+            }
+
+            Usuario autorPerg = arqUsuarios.read(selecionada.getIdUsuario());
+
+            System.out.println("\nDetalhes da pergunta");
+            System.out.println("-------------------");
+            System.out.println("Autor: " + (autorPerg != null ? autorPerg.nome : "Desconhecido"));
+            System.out.println("Pergunta: " + selecionada.pergunta);
+            System.out.println("Palavras-chave: " + selecionada.palavrasChave);
+            System.out.println("Nota: " + selecionada.nota);
+            System.out.println("Criada em: " + new java.util.Date(selecionada.criacao));
+            System.out.println("Status: " + (selecionada.ativa ? "Ativa" : "Arquivada"));
+
+            char opcaoDetalhe;
+            do {
+                System.out.println("\nA - Ver respostas");
+                System.out.println("B - Votar nesta pergunta");
+                System.out.println("R - Retornar");
+                System.out.print("\nOpção: ");
+
+                try {
+                    opcaoDetalhe = console.nextLine().toUpperCase().charAt(0);
+                } catch (Exception e) {
+                    opcaoDetalhe = ' ';
+                }
+
+                switch (opcaoDetalhe) {
+                    case 'A':
+                        try {
+                            MenuResposta menuResposta = new MenuResposta(selecionada, usuario);
+                            menuResposta.menu();
+                        } catch (Exception e) {
+                            System.out.println("\nErro ao acessar o menu de respostas!");
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case 'B':
+                        votarPergunta(selecionada);
+                        break;
+
+                    case 'R':
+                        break;
+
+                    default:
+                        System.out.println("\nOpção inválida!");
+                        break;
+                }
+            } while (opcaoDetalhe != 'R');
+
+        } catch (NumberFormatException e) {
+            System.out.println("\nNúmero inválido! Digite apenas números.");
+        } catch (Exception e) {
+            System.out.println("\nErro ao buscar perguntas!");
+            e.printStackTrace();
+        }
     }
 
     private void minhaArea() {
@@ -65,11 +188,11 @@ public class MenuUsuario {
 
         try {
             opcao = console.nextLine().toUpperCase().charAt(0);
-        } catch(Exception e) {
+        } catch (Exception e) {
             opcao = ' ';
         }
 
-        switch(opcao) {
+        switch (opcao) {
             case 'A':
                 meusDados();
                 break;
@@ -78,18 +201,18 @@ public class MenuUsuario {
                 try {
                     MenuPerguntas menuPerguntas = new MenuPerguntas(usuario);
                     menuPerguntas.menu();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println("\nErro ao acessar o menu de perguntas!");
                     e.printStackTrace();
                 }
                 break;
 
             case 'C':
-                System.out.println("\nMinhas respostas - Em construção...");
+                minhasRespostas();
                 break;
 
             case 'D':
-                System.out.println("\nMeus votos - Em construção...");
+                meusVotos();
                 break;
 
             case 'R':
@@ -98,6 +221,159 @@ public class MenuUsuario {
             default:
                 System.out.println("Opção inválida!");
                 break;
+        }
+    }
+
+    private void minhasRespostas() {
+        try {
+            System.out.println("\nMinhas respostas");
+            System.out.println("---------------");
+
+            ArquivoResposta arqRespostas = new ArquivoResposta();
+            ArquivoPergunta arqPerguntas = new ArquivoPergunta();
+
+            ArrayList<ParPerguntaResposta> lista = arqRespostas.getIndicePerguntaResposta().read(null);
+
+            if (lista == null || lista.isEmpty()) {
+                System.out.println("\nVocê ainda não respondeu nenhuma pergunta.");
+                return;
+            }
+
+            int numero = 1;
+            boolean encontrou = false;
+
+            for (ParPerguntaResposta par : lista) {
+                Resposta r = arqRespostas.read(par.getIdResposta());
+
+                if (r != null && r.ativa && r.getIdUsuario() == usuario.getId()) {
+                    Pergunta p = arqPerguntas.read(r.getIdPergunta());
+
+                    System.out
+                            .println("\n" + numero + " - Pergunta: " + (p != null ? p.pergunta : "Pergunta removida"));
+                    System.out.println("Resposta: " + r.texto);
+                    System.out.println("Nota: " + r.nota);
+
+                    numero++;
+                    encontrou = true;
+                }
+            }
+
+            if (!encontrou) {
+                System.out.println("\nVocê ainda não respondeu nenhuma pergunta.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\nErro ao listar suas respostas!");
+            e.printStackTrace();
+        }
+    }
+
+    private void meusVotos() {
+        try {
+            System.out.println("\nMeus votos");
+            System.out.println("----------");
+
+            ArquivoVoto arqVotos = new ArquivoVoto();
+            ArquivoPergunta arqPerguntas = new ArquivoPergunta();
+            ArquivoResposta arqRespostas = new ArquivoResposta();
+
+            ArrayList<ParUsuarioVoto> lista = arqVotos.getIndiceUsuarioVoto().read(null);
+
+            if (lista == null || lista.isEmpty()) {
+                System.out.println("\nVocê ainda não votou em nada.");
+                return;
+            }
+
+            int numero = 1;
+            boolean encontrou = false;
+
+            for (ParUsuarioVoto par : lista) {
+                Voto v = arqVotos.read(par.getIdVoto());
+
+                if (v != null && v.getIdUsuario() == usuario.getId()) {
+                    if (v.idResposta > 0) {
+                        Resposta r = arqRespostas.read(v.idResposta);
+                        if (r != null) {
+                            System.out.println("\n" + numero + " - Voto em resposta: " + r.texto);
+                            System.out.println("Valor: " + v.valor);
+                            numero++;
+                            encontrou = true;
+                        }
+                    } else if (v.idPergunta > 0) {
+                        Pergunta p = arqPerguntas.read(v.idPergunta);
+                        if (p != null) {
+                            System.out.println("\n" + numero + " - Voto em pergunta: " + p.pergunta);
+                            System.out.println("Valor: " + v.valor);
+                            numero++;
+                            encontrou = true;
+                        }
+                    }
+                }
+            }
+
+            if (!encontrou) {
+                System.out.println("\nVocê ainda não votou em nada.");
+            }
+
+        } catch (Exception e) {
+            System.out.println("\nErro ao listar seus votos!");
+            e.printStackTrace();
+        }
+    }
+
+    private void votarPergunta(Pergunta perguntaSelecionada) {
+        try {
+            if (!perguntaSelecionada.ativa) {
+                System.out.println("\nEsta pergunta foi arquivada e não pode receber votos.");
+                return;
+            }
+
+            if (perguntaSelecionada.getIdUsuario() == usuario.getId()) {
+                System.out.println("\nVocê não pode votar na própria pergunta.");
+                return;
+            }
+
+            ArquivoVoto arqVotos = new ArquivoVoto();
+            ArrayList<ParUsuarioVoto> votosUsuario = arqVotos.getIndiceUsuarioVoto().read(null);
+            if (votosUsuario != null) {
+                for (ParUsuarioVoto par : votosUsuario) {
+                    Voto v = arqVotos.read(par.getIdVoto());
+                    if (v != null && v.getIdUsuario() == usuario.getId()
+                            && v.getIdPergunta() == perguntaSelecionada.getId() && v.getIdResposta() == -1) {
+                        System.out.println("\nVocê já votou nesta pergunta.");
+                        return;
+                    }
+                }
+            }
+
+            System.out.print("\nValor do voto (+1 ou -1): ");
+            String entrada = console.nextLine();
+
+            if (entrada.isEmpty()) {
+                return;
+            }
+
+            short valor = Short.parseShort(entrada);
+
+            if (valor != 1 && valor != -1) {
+                System.out.println("\nValor inválido. Use apenas +1 ou -1.");
+                return;
+            }
+
+            Voto voto = new Voto(usuario.getId(), perguntaSelecionada.getId(), -1, valor);
+            arqVotos.create(voto);
+
+            perguntaSelecionada.nota = (short) (perguntaSelecionada.nota + valor);
+            ArquivoPergunta arqPerguntas = new ArquivoPergunta();
+            arqPerguntas.update(perguntaSelecionada);
+
+            System.out.println("\nVoto registrado com sucesso!");
+
+        } catch (NumberFormatException e) {
+            System.out.println("\nNúmero inválido. Digite apenas números.");
+        } catch (Exception e) {
+            System.out.println("\nErro ao votar na pergunta!");
+            e.printStackTrace();
         }
     }
 
@@ -121,11 +397,11 @@ public class MenuUsuario {
             try {
                 opcao = console.nextLine().toUpperCase().charAt(0);
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 opcao = ' ';
             }
 
-            switch(opcao) {
+            switch (opcao) {
                 case 'A':
                     alterarNome();
                     break;
@@ -149,7 +425,7 @@ public class MenuUsuario {
                     System.out.println("Opção inválida!");
                     break;
             }
-        } while(opcao != 'R');
+        } while (opcao != 'R');
     }
 
     private void alterarNome() {
@@ -157,19 +433,19 @@ public class MenuUsuario {
             System.out.print("\nNovo nome (vazio para cancelar): ");
             String novoNome = console.nextLine();
 
-            if(novoNome.isEmpty()) {
+            if (novoNome.isEmpty()) {
                 return;
             }
 
             usuario.nome = novoNome;
 
-            if(arqUsuarios.update(usuario)) {
+            if (arqUsuarios.update(usuario)) {
                 System.out.println("\nNome alterado com sucesso!");
             } else {
                 System.out.println("\nNão foi possível alterar o nome.");
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("\nErro ao alterar o nome!");
             e.printStackTrace();
         }
@@ -180,28 +456,28 @@ public class MenuUsuario {
             System.out.print("\nNovo e-mail (vazio para cancelar): ");
             String novoEmail = console.nextLine();
 
-            if(novoEmail.isEmpty()) {
+            if (novoEmail.isEmpty()) {
                 return;
             }
 
             // Verifica se o novo e-mail já pertence a outro usuário
             Usuario usuarioExistente = arqUsuarios.read(novoEmail);
 
-            if(usuarioExistente != null &&
-                usuarioExistente.getId() != usuario.getId()) {
+            if (usuarioExistente != null &&
+                    usuarioExistente.getId() != usuario.getId()) {
                 System.out.println("\nEste e-mail já está cadastrado.");
                 return;
             }
 
             usuario.email = novoEmail;
 
-            if(arqUsuarios.update(usuario)) {
+            if (arqUsuarios.update(usuario)) {
                 System.out.println("\nE-mail alterado com sucesso!");
             } else {
                 System.out.println("\nNão foi possível alterar o e-mail.");
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("\nErro ao alterar o e-mail!");
             e.printStackTrace();
         }
@@ -212,27 +488,27 @@ public class MenuUsuario {
             System.out.print("\nNova senha (vazio para cancelar): ");
             String novaSenha = console.nextLine();
 
-            if(novaSenha.isEmpty()) {
+            if (novaSenha.isEmpty()) {
                 return;
             }
 
             System.out.print("Confirme a nova senha: ");
             String confirmacao = console.nextLine();
 
-            if(!novaSenha.equals(confirmacao)) {
+            if (!novaSenha.equals(confirmacao)) {
                 System.out.println("\nAs senhas não conferem.");
                 return;
             }
 
             usuario.hashSenha = Usuario.gerarHash(novaSenha);
 
-            if(arqUsuarios.update(usuario)) {
+            if (arqUsuarios.update(usuario)) {
                 System.out.println("\nSenha alterada com sucesso!");
             } else {
                 System.out.println("\nNão foi possível alterar a senha.");
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("\nErro ao alterar a senha!");
             e.printStackTrace();
         }
@@ -243,14 +519,14 @@ public class MenuUsuario {
             System.out.print("\nNova pergunta secreta (vazio para cancelar): ");
             String novaPergunta = console.nextLine();
 
-            if(novaPergunta.isEmpty()) {
+            if (novaPergunta.isEmpty()) {
                 return;
             }
 
             System.out.print("Nova resposta secreta: ");
             String novaResposta = console.nextLine();
 
-            if(novaResposta.isEmpty()) {
+            if (novaResposta.isEmpty()) {
                 System.out.println("\nResposta secreta inválida.");
                 return;
             }
@@ -258,13 +534,13 @@ public class MenuUsuario {
             usuario.perguntaSecreta = novaPergunta;
             usuario.hashRespostaSecreta = Usuario.gerarHashResposta(novaResposta);
 
-            if(arqUsuarios.update(usuario)) {
+            if (arqUsuarios.update(usuario)) {
                 System.out.println("\nPergunta e resposta de recuperação alteradas com sucesso!");
             } else {
                 System.out.println("\nNão foi possível alterar os dados de recuperação.");
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("\nErro ao alterar os dados de recuperação!");
             e.printStackTrace();
         }
