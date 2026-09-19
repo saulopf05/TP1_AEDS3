@@ -51,6 +51,8 @@ O fluxo completo é:
 
 1. **Acesso** — a pessoa faz login com e-mail e senha, ou se cadastra no
    primeiro acesso. A senha nunca é armazenada: guardamos apenas o hash SHA-256.
+   Se o login falhar, é possível tentar de novo ou recuperar a senha
+   respondendo à pergunta secreta cadastrada.
 2. **Minha área** — espaço pessoal, onde a pessoa gerencia os próprios dados,
    as próprias perguntas, e consulta as respostas e os votos que já deu.
 3. **Minhas perguntas** — CRUD completo das perguntas do usuário logado:
@@ -61,7 +63,7 @@ O fluxo completo é:
 
 Uma pergunta **nunca é excluída fisicamente**, apenas arquivada, conforme o
 enunciado. Uma pergunta arquivada some das buscas, não recebe mais respostas e
-continua visível apenas para o seu autor, marcada como `(ARQUIVADA)`.
+continua visível apenas para o seu autor, marcada como `ARQUIVADA`.
 
 ---
 
@@ -99,11 +101,12 @@ TP1_AEDS3/
 | `ParUsuarioPergunta` | `indices` | Par `(idUsuario; idPergunta)` da Árvore B+. Implementa `InterfaceArvoreBMais`. |
 | `ParPerguntaResposta` | `indices` | Par `(idPergunta; idResposta)` da Árvore B+. |
 | `ParUsuarioVoto` | `indices` | Par `(idUsuario; idVoto)` da Árvore B+. |
-| `MenuAcesso` | `menus` | Tela inicial: login e cadastro de novo usuário. |
+| `MenuAcesso` | `menus` | Tela inicial: login, recuperação de senha e cadastro de novo usuário. |
 | `MenuUsuario` | `menus` | Menu principal, Minha área, Meus dados, Buscar perguntas, Meus votos e Minhas respostas. |
 | `MenuPerguntas` | `menus` | Menu Minhas perguntas: listar, incluir, alterar e arquivar. |
 | `MenuResposta` | `menus` | Menu de respostas de uma pergunta: listar, responder e votar. |
 | `Console` | `menus` | Entrada de teclado única, compartilhada por todos os menus. |
+| `Formato` | `menus` | Converte os milissegundos das entidades em data e hora legíveis. |
 
 ### 4.2. Classes fornecidas pelo professor (pacote `aed3`)
 
@@ -183,15 +186,24 @@ Este e-mail já está cadastrado.
 
 ![Login](docs/img/02-login.png)
 
-Login com senha incorreta — a mensagem é genérica de propósito, para não
-revelar se o que está errado é o e-mail ou a senha:
+Login com senha incorreta. O e-mail e a senha são pedidos e conferidos de uma
+só vez, e a mensagem é genérica de propósito, para não revelar se o que está
+errado é o e-mail ou a senha. Em seguida são oferecidas as opções de tentar
+novamente e de recuperar a senha:
 
 ```
 Login
 -----
 E-mail (vazio para cancelar): ana@exemplo.com
 Senha: senhaErrada
+
 Nome/e-mail ou senha incorretos.
+
+A - Tentar novamente
+B - Recuperar senha
+R - Retornar
+
+Opção: _
 ```
 
 Login correto:
@@ -206,9 +218,52 @@ Login realizado com sucesso!
 Bem-vindo(a), Ana Ribeiro Costa!
 ```
 
-### 6.3. Menu principal e Minha área
+### 6.3. Recuperação de senha
 
-![Menu principal](docs/img/03-menu-principal.png)
+![Recuperação de senha](docs/img/03-recuperar-senha.png)
+
+Com a resposta errada, a senha não é alterada:
+
+```
+Recuperar senha
+---------------
+E-mail (vazio para cancelar): ana@exemplo.com
+
+Pergunta secreta: Qual o nome do meu primeiro animal de estimação?
+Resposta (vazio para cancelar): Bolinha
+
+Resposta incorreta. Não foi possível recuperar a senha.
+```
+
+Com a resposta certa, a pessoa define uma nova senha e volta para o login. Note
+que a resposta foi digitada como `REX` e a cadastrada era `Rex`: a comparação
+ignora maiúsculas e acentos.
+
+```
+Recuperar senha
+---------------
+E-mail (vazio para cancelar): ana@exemplo.com
+
+Pergunta secreta: Qual o nome do meu primeiro animal de estimação?
+Resposta (vazio para cancelar): REX
+
+Nova senha (vazio para cancelar): novaSenha456
+Confirme a nova senha: novaSenha456
+
+Senha alterada com sucesso! Faça o login com a nova senha.
+
+Login
+-----
+E-mail (vazio para cancelar): ana@exemplo.com
+Senha: novaSenha456
+
+Login realizado com sucesso!
+Bem-vindo(a), Ana Ribeiro Costa!
+```
+
+### 6.4. Menu principal e Minha área
+
+![Menu principal](docs/img/04-menu-principal.png)
 
 ```
 AJUDA AÍ 1.0
@@ -232,9 +287,9 @@ R - Retornar
 Opção: B
 ```
 
-### 6.4. Meus dados — alteração de e-mail
+### 6.5. Meus dados — alteração de e-mail
 
-![Meus dados](docs/img/04-meus-dados.png)
+![Meus dados](docs/img/05-meus-dados.png)
 
 ```
 Meus dados
@@ -272,9 +327,9 @@ Senha: senha123
 Login realizado com sucesso!
 ```
 
-### 6.5. Minhas perguntas — inclusão
+### 6.6. Minhas perguntas — inclusão
 
-![Incluir pergunta](docs/img/05-incluir.png)
+![Incluir pergunta](docs/img/06-incluir.png)
 
 ```
 Minhas perguntas
@@ -295,30 +350,37 @@ Palavras-chave (separadas por ;): pão;mofado;saúde
 Pergunta cadastrada com sucesso!
 ```
 
-### 6.6. Minhas perguntas — listagem
+### 6.7. Minhas perguntas — listagem
 
-![Listar perguntas](docs/img/06-listar.png)
+![Listar perguntas](docs/img/07-listar.png)
 
-As perguntas são numeradas sequencialmente na tela. Nem o ID da pergunta nem o
-ID do usuário aparecem, porque são dados de uso interno do sistema.
+As perguntas são numeradas sequencialmente na tela, com a data e a hora de
+criação. Nem o ID da pergunta nem o ID do usuário aparecem, porque são dados de
+uso interno do sistema.
 
 ```
 Minhas perguntas
 ----------------
 
-1 - É seguro comer pão mofado, se você cortar a parte mofada fora?
+(1)
+19/09/2026 13:56
+É seguro comer pão mofado, se você cortar a parte mofada fora?
 Palavras-chave: pão;mofado;saúde
 
-2 - Para quem está começando a programar agora, qual a linguagem recomendada?
+(2)
+19/09/2026 13:56
+Para quem está começando a programar agora, qual a linguagem recomendada?
 Palavras-chave: programação;linguagem
 
-3 - Por que a luz azul das telas atrapalha o nosso sono?
+(3)
+19/09/2026 13:57
+Por que a luz azul das telas atrapalha o nosso sono?
 Palavras-chave: luz azul;sono
 ```
 
-### 6.7. Minhas perguntas — alteração
+### 6.8. Minhas perguntas — alteração
 
-![Alterar pergunta](docs/img/07-alterar.png)
+![Alterar pergunta](docs/img/08-alterar.png)
 
 ```
 Alterar pergunta
@@ -333,9 +395,9 @@ Novas palavras-chave (deixe vazio para não alterar):
 Pergunta alterada com sucesso!
 ```
 
-### 6.8. Minhas perguntas — arquivamento
+### 6.9. Minhas perguntas — arquivamento
 
-![Arquivar pergunta](docs/img/08-arquivar.png)
+![Arquivar pergunta](docs/img/09-arquivar.png)
 
 ```
 Arquivar pergunta
@@ -355,20 +417,25 @@ marcada, e some das buscas dos outros usuários:
 Minhas perguntas
 ----------------
 
-1 - É seguro comer pão mofado, se você cortar a parte mofada fora?
+(1)
+19/09/2026 13:56
+É seguro comer pão mofado, se você cortar a parte mofada fora?
 Palavras-chave: pão;mofado;saúde
 
-2 - Para quem está começando a programar agora, qual linguagem é a mais recomendada?
+(2)
+19/09/2026 13:56
+Para quem está começando a programar agora, qual linguagem é a mais recomendada?
 Palavras-chave: programação;linguagem
 
-3 - Por que a luz azul das telas atrapalha o nosso sono?
+(3) ARQUIVADA
+19/09/2026 13:57
+Por que a luz azul das telas atrapalha o nosso sono?
 Palavras-chave: luz azul;sono
- (ARQUIVADA)
 ```
 
-### 6.9. Buscar perguntas
+### 6.10. Buscar perguntas
 
-![Buscar perguntas](docs/img/09-buscar.png)
+![Buscar perguntas](docs/img/10-buscar.png)
 
 Note que a pergunta 3, arquivada, não aparece na busca:
 
@@ -376,29 +443,34 @@ Note que a pergunta 3, arquivada, não aparece na busca:
 Buscar perguntas
 ----------------
 
-1 - É seguro comer pão mofado, se você cortar a parte mofada fora?
+(1)
+19/09/2026 13:56
+É seguro comer pão mofado, se você cortar a parte mofada fora?
 Autor: Ana Ribeiro Costa
 Palavras-chave: pão;mofado;saúde
 
-2 - Para quem está começando a programar agora, qual linguagem é a mais recomendada?
+(2)
+19/09/2026 13:56
+Para quem está começando a programar agora, qual linguagem é a mais recomendada?
 Autor: Ana Ribeiro Costa
 Palavras-chave: programação;linguagem
 
 Digite o número da pergunta para ver detalhes (0 para voltar): 1
 
 Detalhes da pergunta
--------------------
+--------------------
 Autor: Ana Ribeiro Costa
 Pergunta: É seguro comer pão mofado, se você cortar a parte mofada fora?
 Palavras-chave: pão;mofado;saúde
 Nota: 0
-Criada em: Sat Sep 19 13:18:41 GMT-03:00 2026
+Criada em: 19/09/2026 13:56
+Alterada em: 19/09/2026 13:56
 Status: Ativa
 ```
 
-### 6.10. Respostas e votos
+### 6.11. Respostas e votos
 
-![Respostas](docs/img/10-respostas.png)
+![Respostas](docs/img/11-respostas.png)
 
 ```
 Pergunta selecionada
@@ -442,9 +514,9 @@ Você já votou nesta pergunta.
 Você não pode votar na própria pergunta.
 ```
 
-### 6.11. Meus votos
+### 6.12. Meus votos
 
-![Meus votos](docs/img/11-meus-votos.png)
+![Meus votos](docs/img/12-meus-votos.png)
 
 ```
 Meus votos
@@ -469,7 +541,55 @@ acentuação são removidas com a expressão `\p{M}` e tudo vira minúsculo. Ass
 `"São Paulo"`, `"sao paulo"` e `"SAO PAULO"` produzem o mesmo hash, e um
 acento esquecido na hora de recuperar a senha não impede o acesso.
 
-### 7.2. Índice indireto de e-mail em Tabela Hash Extensível
+### 7.2. Recuperação de senha pela pergunta secreta
+
+Como a senha só existe em forma de hash, não há como devolvê-la ao usuário. A
+recuperação, então, redefine a senha depois de conferir a resposta secreta.
+
+O fluxo começa quando o login falha. Em vez de simplesmente voltar ao menu, o
+sistema oferece três saídas — tentar novamente, recuperar a senha ou retornar —
+conforme o enunciado pede. Escolhida a recuperação, `MenuAcesso.recuperarSenha()`
+localiza o usuário pelo e-mail (usando o índice indireto), apresenta a
+`perguntaSecreta` gravada e compara a resposta digitada:
+
+```java
+if(!Usuario.gerarHashResposta(resposta).equals(usuario.hashRespostaSecreta)) {
+    System.out.println("\nResposta incorreta. Não foi possível recuperar a senha.");
+    return false;
+}
+```
+
+A comparação passa pelo mesmo `gerarHashResposta()` do cadastro, então a
+normalização descrita em 7.1 vale aqui: quem cadastrou `"Rex"` consegue entrar
+digitando `"REX"` ou `"rex"`, e um acento esquecido não bloqueia o acesso.
+Conferida a resposta, a nova senha é pedida duas vezes, tem o hash gerado e é
+gravada com `arqUsuarios.update()`. O usuário volta direto para a tela de login.
+
+Uma decisão de segurança acompanha isso: o login passou a pedir o e-mail **e** a
+senha antes de validar qualquer um dos dois. Antes, um e-mail inexistente era
+recusado sem que a senha fosse sequer pedida, o que revelava quais e-mails estão
+cadastrados. Agora os dois são conferidos de uma só vez e a mensagem de erro é a
+mesma nos dois casos, como o enunciado determina.
+
+### 7.3. Datas de criação e de alteração
+
+As entidades guardam data e hora como `long` em milissegundos, conforme o
+enunciado. Esse formato não serve para leitura, então toda tela que mostra uma
+data passa por `Formato.dataHora()`, que converte para `dd/MM/yyyy HH:mm` no
+fuso do computador.
+
+O campo `alteracao` é atualizado automaticamente em toda modificação da
+pergunta — tanto na alteração de texto e palavras-chave quanto no arquivamento:
+
+```java
+p.alteracao = System.currentTimeMillis();
+```
+
+A data de criação aparece acima de cada pergunta nas duas listagens, *Minhas
+perguntas* e *Buscar perguntas*, e a tela de detalhes mostra as duas datas, o
+que permite ver quando uma pergunta foi editada pela última vez.
+
+### 7.4. Índice indireto de e-mail em Tabela Hash Extensível
 
 `ArquivoUsuario` mantém uma `HashExtensivel<ParEmailID>` que relaciona o e-mail
 ao `idUsuario`. É ela que permite o login — a busca é pelo e-mail, mas o
@@ -494,7 +614,7 @@ Como a Tabela Hash Extensível exige registros de tamanho fixo, `ParEmailID`
 grava o e-mail em um bloco fixo de 100 bytes, completado com zeros, mais 4
 bytes do ID — 104 bytes por entrada.
 
-### 7.3. Árvore B+ do relacionamento 1:N entre usuários e perguntas
+### 7.5. Árvore B+ do relacionamento 1:N entre usuários e perguntas
 
 Este é o relacionamento central do trabalho. A chave estrangeira `idUsuario`
 dentro de `Pergunta` resolve o caminho *pergunta → autor*. Para o caminho
@@ -520,21 +640,21 @@ justamente o que caracteriza o relacionamento 1:N.
 O mesmo padrão se repete em `ArquivoResposta`, com o par
 `(idPergunta; idResposta)`, e em `ArquivoVoto`, com o par `(idUsuario; idVoto)`.
 
-### 7.4. Arquivamento no lugar da exclusão
+### 7.6. Arquivamento no lugar da exclusão
 
 Perguntas não são apagadas. O campo `boolean ativa` passa a `false` e a data de
 alteração é atualizada. O arquivamento é definitivo: não existe opção de
 desarquivar em nenhum menu. Uma pergunta arquivada:
 
 - some da tela **Buscar perguntas**, que filtra por `p.ativa`;
-- continua na listagem do autor, marcada com `(ARQUIVADA)`;
+- continua na listagem do autor, marcada com `ARQUIVADA`;
 - não aceita novas respostas — `MenuResposta.menu()` recusa a entrada logo no
   início se a pergunta estiver inativa.
 
 Isso preserva as respostas e os votos que outras pessoas já deixaram, que é
 exatamente o motivo pelo qual o enunciado pede arquivamento em vez de exclusão.
 
-### 7.5. Mapeamento entre número de tela e ID real
+### 7.7. Mapeamento entre número de tela e ID real
 
 Os IDs são internos e não devem aparecer para o usuário. Mas a interface é
 textual e a pessoa precisa de alguma forma indicar sobre qual pergunta quer
@@ -550,7 +670,7 @@ Pergunta p = arqPerguntas.read(idReal);
 O mesmo recurso é usado em `MenuUsuario.buscarPerguntas()` e em
 `MenuResposta.votarResposta()`.
 
-### 7.6. Votação com nota acumulada
+### 7.8. Votação com nota acumulada
 
 Um voto vale `+1` ou `-1` e é gravado como um registro próprio na entidade
 `Voto`, o que permite auditar quem votou em quê. A nota da pergunta ou da
@@ -567,7 +687,7 @@ Duas regras são verificadas antes de aceitar um voto:
 Um voto em pergunta é gravado com `idResposta = -1`, o que distingue os dois
 tipos de voto na listagem de **Meus votos**.
 
-### 7.7. Reuso do espaço de registros excluídos
+### 7.9. Reuso do espaço de registros excluídos
 
 Herdado de `aed3.Arquivo` e ativo em todos os CRUDs. O cabeçalho do arquivo
 mantém uma lista encadeada de espaços livres, ordenada por tamanho
@@ -579,7 +699,7 @@ antigo, ele é sobrescrito no lugar; se não couber, o espaço antigo entra na
 lista de livres, o registro é gravado em outro ponto e o índice direto é
 atualizado com o novo endereço.
 
-### 7.8. Entrada de teclado única
+### 7.10. Entrada de teclado única
 
 Cada menu tinha o seu próprio `Scanner` sobre o `System.in`. Como cada
 `Scanner` lê um bloco inteiro da entrada para o seu buffer interno, as linhas
@@ -653,22 +773,29 @@ deste relatório. Foi verificado com o JDK 26 em Linux.
 
 > **O trabalho está completo e funcionando sem erros de execução?**
 
-**Não, não está completo.** Tudo o que está implementado funciona sem erros de
-execução — os fluxos das seções 6.1 a 6.11 deste relatório são capturas reais
-de uma execução completa, do cadastro ao voto, sem nenhuma exceção. Mas duas
-exigências do enunciado ainda não foram implementadas, e preferimos declarar
-isso:
+**Sim.** Todas as operações pedidas para esta etapa estão implementadas e
+funcionam sem nenhuma exceção em tempo de execução. As seções 6.1 a 6.12 deste
+relatório são capturas reais de uma execução completa, e cobrem exatamente os
+pontos exigidos:
 
-1. **Recuperação de senha.** Os atributos `perguntaSecreta` e
-   `hashRespostaSecreta` existem, são gravados no cadastro e podem ser alterados
-   em *Meus dados*, mas a tela de login ainda não oferece a opção de recuperar a
-   senha quando o acesso falha.
-2. **Data e hora na listagem de perguntas.** Os campos `criacao` e `alteracao`
-   são gravados e mantidos corretamente, e a data aparece nos detalhes da
-   pergunta em *Buscar perguntas*, mas ainda não é exibida acima de cada
-   pergunta na tela *Minhas perguntas*, no formato do enunciado.
+| Operação exigida | Onde está | Tela |
+|---|---|---|
+| Cadastro de um novo usuário | `MenuAcesso.novoUsuario()` | 6.1 |
+| Login falhando e recuperação de senha | `MenuAcesso.login()`, `falhaNoLogin()`, `recuperarSenha()` | 6.2 e 6.3 |
+| Login correto | `MenuAcesso.login()` | 6.2 |
+| Atualização do e-mail do usuário | `MenuUsuario.alterarEmail()`, `ArquivoUsuario.update()` | 6.5 |
+| Cadastro de uma pergunta | `MenuPerguntas.incluir()` | 6.6 |
+| Listagem de perguntas | `MenuPerguntas.listar()` | 6.7 |
+| Atualização de uma pergunta | `MenuPerguntas.alterar()` | 6.8 |
+| Arquivamento de uma pergunta | `MenuPerguntas.arquivar()` | 6.9 |
 
-Nenhuma das duas provoca erro de execução; são funcionalidades ausentes.
+Além do exigido, também estão funcionando as respostas, os votos em perguntas e
+em respostas, e as telas *Minhas respostas* e *Meus votos*, que adiantam parte
+do segundo trabalho prático.
+
+Verificamos clonando o repositório em uma pasta limpa, apagando `dados/` e
+executando o roteiro completo do zero: a compilação não emite nenhum erro nem
+aviso, e a execução vai do cadastro ao voto sem nenhuma exceção.
 
 > **O trabalho é original e não a cópia de um trabalho de outro grupo?**
 
