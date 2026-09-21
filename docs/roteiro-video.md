@@ -41,7 +41,11 @@ precisar reiniciar o programa.
 
 ## 2. Roteiro
 
-Tempo total estimado: **4min 55s**. Os valores a digitar estão em `código`.
+Tempo total estimado: **4min 50s**. Os valores a digitar estão em `código`.
+
+Os dados são **os mesmos do relatório e dos prints** — digite exatamente assim e
+o vídeo, as imagens e os blocos de texto do `README.md` vão contar a mesma
+história.
 
 ### Abertura — 10s
 
@@ -60,61 +64,52 @@ Digite: `B`
 
 | Campo | Valor |
 |---|---|
-| E-mail | `ana@exemplo.com` |
-| Nome completo | `Ana Ribeiro Costa` |
-| Senha | `senha123` |
-| Pergunta secreta | `Qual o nome do meu primeiro animal de estimação?` |
-| Resposta secreta | `Rex` |
+| E-mail | `lucas@teste.com` |
+| Nome completo | `Lucas José` |
+| Senha | `12345678` |
+| Pergunta secreta | `Qual o seu animal favorito?` |
+| Resposta secreta | `Cachorro` |
 
 > "O cadastro é a única forma de entrar no sistema. A senha não é gravada: o que
 > vai para o arquivo é o hash SHA-256 dela. A resposta secreta também vira hash,
 > mas antes passa por uma normalização que remove acentos e converte para
 > minúsculas — já já isso vai fazer diferença."
 
-📸 **Print 01** aqui (tela com "Usuário cadastrado com sucesso! ID do usuário: 1").
-
 ### ② Login falhando e recuperação de senha — 45s
 
-Digite: `A` → `ana@exemplo.com` → `senhaErrada`
+Digite: `A` → `lucas@teste.com` → `123`
 
 > "O e-mail e a senha são conferidos de uma só vez, e a mensagem de erro é a
 > mesma nos dois casos, para não revelar qual dos dois está errado."
 
-📸 **Print 02** aqui (erro + as três opções).
-
-Digite: `B` (recuperar senha) → `ana@exemplo.com`
+Digite: `B` (recuperar senha) → `lucas@teste.com`
 
 > "O sistema busca o usuário pelo e-mail, usando a tabela hash extensível, e
 > mostra a pergunta secreta que ele cadastrou."
 
-Digite a resposta em **letras maiúsculas**: `REX`
+Digite a resposta com a caixa trocada de propósito: `CACHOrro`
 
-> "Repare que cadastrei 'Rex' com R maiúsculo apenas, e estou digitando 'REX'.
-> Funciona porque a comparação é feita sobre o hash da resposta normalizada —
-> acento e caixa de letra não impedem a recuperação."
+> "Repare que eu cadastrei 'Cachorro' e estou digitando 'CACHOrro', com as
+> letras embaralhadas entre maiúscula e minúscula. Funciona porque a comparação
+> é feita sobre o hash da resposta normalizada — caixa de letra e acento não
+> impedem a recuperação."
 
-Nova senha: `novaSenha456` → confirmação: `novaSenha456`
-
-📸 **Print 03** aqui ("Senha alterada com sucesso!").
+Nova senha: `123` → confirmação: `123`
 
 ### ③ Login correto — 10s
 
 O sistema volta sozinho para a tela de login.
 
-Digite: `ana@exemplo.com` → `novaSenha456`
+Digite: `lucas@teste.com` → `123`
 
 > "E agora entro com a senha que acabei de definir."
-
-📸 **Print 04** aqui (menu principal com "Usuário: Ana Ribeiro Costa").
 
 ### ④ Atualização do e-mail + explicação do código — 60s
 
 Digite: `A` (Minha área) → `A` (Meus dados) → `B` (Alterar email) →
-`ana.costa@exemplo.com`
+`lucas@teste2.com`
 
 > "O e-mail mudou, e o menu já reexibe o dado atualizado."
-
-📸 **Print 05** aqui (Meus dados mostrando o e-mail novo).
 
 **Agora vá para o VS Code**, em `src/arquivos/ArquivoUsuario.java`, método
 `update()`. Fale enquanto aponta o código (o trecho está na seção 3 deste
@@ -130,39 +125,23 @@ documento):
 > funcionando."
 
 **Volte ao terminal.** Digite: `R` (retornar) → `S` (sair) → `A` (login) →
-`ana.costa@exemplo.com` → `novaSenha456`
+`lucas@teste2.com` → `123`
 
 > "E aqui está a prova de que o índice foi atualizado: o login funciona com o
 > e-mail novo."
 
-### ⑤ Cadastro de perguntas — 30s
+### ⑤ Cadastro de uma pergunta — 25s
 
 Digite: `A` (Minha área) → `B` (Minhas perguntas) → `B` (Incluir)
 
 | Campo | Valor |
 |---|---|
-| Pergunta | `É seguro comer pão mofado, se você cortar a parte mofada fora?` |
-| Palavras-chave | `pão;mofado;saúde` |
-
-Digite `B` de novo:
-
-| Campo | Valor |
-|---|---|
-| Pergunta | `Para quem está começando a programar agora, qual a linguagem recomendada?` |
-| Palavras-chave | `programação;linguagem` |
-
-E `B` uma terceira vez:
-
-| Campo | Valor |
-|---|---|
-| Pergunta | `Por que a luz azul das telas atrapalha o nosso sono?` |
-| Palavras-chave | `luz azul;sono` |
+| Pergunta | `Qual sua cor favorita?` |
+| Palavras-chave | `cor` |
 
 > "Só peço o texto e as palavras-chave. O ID do usuário vem de quem está logado,
 > as datas vêm do relógio do computador e a nota começa em zero. A pergunta é
 > vinculada ao usuário na mesma operação em que é criada."
-
-📸 **Print 06** aqui ("Pergunta cadastrada com sucesso!").
 
 ### ⑥ Listagem de perguntas — 15s
 
@@ -173,24 +152,20 @@ Digite: `A` (Listar)
 > usuário logado. As perguntas são numeradas na tela, com a data de criação. Os
 > IDs não aparecem, porque são de uso interno."
 
-📸 **Print 07** aqui (as três perguntas numeradas com data).
-
 ### ⑦ Atualização de uma pergunta — 25s
 
-Digite: `C` (Alterar) → `2`
+Digite: `C` (Alterar) → `1`
 
-- Nova pergunta: `Para quem está começando a programar agora, qual linguagem é a mais recomendada?`
-- Novas palavras-chave: *(deixe vazio, aperte Enter)*
+- Nova pergunta: `Qual a sua comida favorita?`
+- Novas palavras-chave: `comida`
 
 > "Informo o número que apareceu na tela, e o sistema converte esse número para o
 > ID real da pergunta. Campo deixado em branco não é alterado, e a data de
 > alteração é ajustada automaticamente."
 
-📸 **Print 08** aqui ("Pergunta alterada com sucesso!").
-
 ### ⑧ Arquivamento + explicação do código — 60s
 
-Digite: `A` (Listar, para atualizar os números) → `D` (Arquivar) → `3` → `S`
+Digite: `A` (Listar, para atualizar os números) → `D` (Arquivar) → `1` → `S`
 
 > "Confirmado o arquivamento..."
 
@@ -198,8 +173,6 @@ Digite: `A` (Listar)
 
 > "...a pergunta continua aparecendo para o autor, agora marcada como ARQUIVADA,
 > e sai das buscas dos outros usuários."
-
-📸 **Print 09** aqui (listagem com a pergunta 3 marcada ARQUIVADA).
 
 **Vá para o VS Code**, em `src/menus/MenuPerguntas.java`, método `arquivar()`:
 
@@ -302,55 +275,97 @@ Os pontos a citar:
 Os arquivos vão em `docs/img/` e os marcadores já estão no `README.md`, cada um
 no lugar certo. Use exatamente estes nomes.
 
-Os prints **01 a 09** saem da mesma sessão do vídeo, nos pontos marcados 📸.
-Os prints **10 a 12** exigem um segundo usuário e ficam para depois.
+**Os prints 01 a 09 já foram tirados e estão no repositório.** A tabela abaixo
+fica como referência, caso algum precise ser refeito — por exemplo os prints
+**08 e 09**, em que o gerenciador de arquivos ficou sobreposto à direita do
+terminal e cobriu parte da tela.
 
-| Arquivo | Quando tirar | O que precisa estar visível |
-|---|---|---|
-| `01-acesso.png` | Passo ① | Menu AJUDA AÍ + cadastro preenchido + "Usuário cadastrado com sucesso! ID do usuário: 1" |
-| `02-login.png` | Passo ② | "Nome/e-mail ou senha incorretos." seguido das opções Tentar novamente / Recuperar senha / Retornar |
-| `03-recuperar-senha.png` | Passo ② | A pergunta secreta na tela, a resposta `REX` digitada e "Senha alterada com sucesso!" |
-| `04-menu-principal.png` | Passo ③ | Menu principal com "Usuário: Ana Ribeiro Costa" |
-| `05-meus-dados.png` | Passo ④ | Tela Meus dados já com `ana.costa@exemplo.com` |
-| `06-incluir.png` | Passo ⑤ | Tela Incluir pergunta preenchida + "Pergunta cadastrada com sucesso!" |
-| `07-listar.png` | Passo ⑥ | As três perguntas numeradas `(1) (2) (3)` com data e palavras-chave |
-| `08-alterar.png` | Passo ⑦ | Pergunta atual, pergunta nova digitada e "Pergunta alterada com sucesso!" |
-| `09-arquivar.png` | Passo ⑧ | A listagem final, com a `(3) ARQUIVADA` |
+| Arquivo | Passo | O que precisa estar visível | Status |
+|---|---|---|---|
+| `01-acesso.png` | ① | Menu AJUDA AÍ + cadastro preenchido + "Usuário cadastrado com sucesso! ID do usuário: 1" | ✅ |
+| `02-login.png` | ② | "Nome/e-mail ou senha incorretos." seguido das opções Tentar novamente / Recuperar senha / Retornar | ✅ |
+| `03-recuperar-senha.png` | ② | A pergunta secreta, a resposta `CACHOrro` digitada e "Senha alterada com sucesso!" | ✅ |
+| `04-menu-principal.png` | ③ | Menu principal com "Usuário: Lucas José" | ✅ |
+| `05-meus-dados.png` | ④ | Tela Meus dados já com `lucas@teste2.com` | ✅ |
+| `06-incluir.png` | ⑤ | Tela Incluir pergunta preenchida + "Pergunta cadastrada com sucesso!" | ✅ |
+| `07-listar.png` | ⑥ | A pergunta `(1)` com data e palavras-chave | ✅ |
+| `08-alterar.png` | ⑦ | Pergunta atual, pergunta nova digitada e "Pergunta alterada com sucesso!" | ⚠️ refazer sem a janela sobreposta |
+| `09-arquivar.png` | ⑧ | A listagem final, com a `(1) ARQUIVADA` | ⚠️ refazer sem a janela sobreposta |
 
-### Prints 10 a 12 — sessão extra, depois do vídeo
+### Prints 10 a 12 — sessão extra, continuando de onde você parou
 
-Não precisam entrar no vídeo (o enunciado não pede), mas o relatório tem as
-telas. Para tirá-los, cadastre um segundo usuário — é preciso, porque **ninguém
-pode votar no próprio conteúdo**.
+Não precisam entrar no vídeo (o enunciado não pede), mas o relatório tem as três
+telas. **Não apague o `dados/`** — esta sessão continua do estado em que os
+prints 01 a 09 pararam: o usuário Lucas José, com e-mail `lucas@teste2.com`,
+senha `123`, e uma única pergunta, já arquivada.
 
-1. Saia e cadastre: `bruno@exemplo.com` / `Bruno Alves Pinto` / `outrasenha` /
-   pergunta secreta `Cidade onde nasci?` / resposta `Belo Horizonte`.
-2. Entre como Bruno → `B` (Buscar perguntas).
+Duas coisas fazem esta etapa ser necessária:
 
-| Arquivo | Onde | O que precisa estar visível |
-|---|---|---|
-| `10-buscar.png` | Buscar perguntas | As perguntas com autor e data, **sem a arquivada**, e a tela de detalhes com "Criada em" e "Alterada em" |
-| `11-respostas.png` | Detalhes → `A` → `B` | Resposta cadastrada, depois a listagem mostrando texto, autor e nota |
-| `12-meus-votos.png` | Minha área → `D` | Pelo menos um voto listado |
+- a única pergunta existente está arquivada, então *Buscar perguntas* apareceria
+  vazia — é preciso criar uma pergunta que fique ativa;
+- **ninguém pode votar no próprio conteúdo**, então é preciso um segundo usuário.
 
-Sequência sugerida para os três de uma vez, como Bruno:
+Os textos abaixo são exatamente os que estão no `README.md`. Se digitar outra
+coisa, o print e o bloco de texto do relatório vão divergir.
+
+**Parte 1 — como Lucas, criar uma pergunta que fica ativa**
 
 ```
-B          Buscar perguntas
-1          abre a primeira pergunta            → print 10
-A          Ver respostas
-B          Responder → escreva uma resposta
-A          Listar respostas                    → print 11
-R          Retornar
-B          Votar nesta pergunta → digite 1
-R          Retornar
-A          Minha área
-D          Meus votos                          → print 12
+A                    Login: lucas@teste2.com / 123
+A                    Minha área
+B                    Minhas perguntas
+B                    Incluir
+```
+- Pergunta: `Qual a melhor linguagem para quem está começando a programar?`
+- Palavras-chave: `programação;linguagem`
+
+```
+R                    Retornar
+S                    Sair
 ```
 
-> Para o print 12 ficar mais rico, entre como Ana depois e vote na resposta do
-> Bruno: `B` → `1` → `A` → `C` → `1` → `1`. Aí *Meus votos* da Ana mostra um voto
-> em resposta, e o do Bruno, um voto em pergunta.
+**Parte 2 — cadastrar a Maria**
+
+```
+B                    Novo usuário
+```
+
+| Campo | Valor |
+|---|---|
+| E-mail | `maria@teste.com` |
+| Nome completo | `Maria Silva` |
+| Senha | `87654321` |
+| Pergunta secreta | `Qual a cidade onde nasci?` |
+| Resposta secreta | `Ouro Preto` |
+
+**Parte 3 — como Maria, os três prints**
+
+```
+A                    Login: maria@teste.com / 87654321
+B                    Buscar perguntas
+1                    abre a pergunta ativa              → 📸 print 10
+A                    Ver respostas
+B                    Responder
+```
+- Texto da resposta: `Python é uma boa porta de entrada, porque a sintaxe é simples e você foca na lógica.`
+
+```
+A                    Listar respostas                   → 📸 print 11
+R                    Retornar
+B                    Votar nesta pergunta → digite 1
+R                    Retornar
+A                    Minha área
+D                    Meus votos                         → 📸 print 12
+```
+
+| Arquivo | O que precisa estar visível |
+|---|---|
+| `10-buscar.png` | A listagem com autor e data — **só a pergunta ativa, sem a arquivada** — e, abaixo, os detalhes com "Criada em" e "Alterada em" |
+| `11-respostas.png` | A resposta cadastrada e a listagem mostrando texto, autor `Maria Silva` e nota |
+| `12-meus-votos.png` | `1 - Voto em pergunta: Qual a melhor linguagem...` com `Valor: 1` |
+
+> **Feche o gerenciador de arquivos antes de capturar.** Nos prints 08 e 09 ele
+> ficou sobreposto à direita do terminal, cobrindo parte da tela.
 
 ---
 

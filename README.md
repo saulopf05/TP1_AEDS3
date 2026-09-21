@@ -143,11 +143,11 @@ endereço no arquivo.
 
 ## 6. Telas do sistema
 
-As telas abaixo são capturas reais da execução, feitas em um terminal. Tanto os
-menus quanto o texto digitado aparecem exatamente como o usuário os vê.
+Cada tela abaixo traz o print do terminal e, logo em seguida, o mesmo conteúdo
+em texto — assim é possível ler e buscar o conteúdo sem depender da imagem.
 
-> As pastas `docs/img/` estão reservadas para os prints do grupo. Onde houver um
-> marcador `![](docs/img/...)`, basta colar o arquivo de imagem correspondente.
+Todas as capturas vêm de uma mesma execução, começando com o arquivo de dados
+vazio.
 
 ### 6.1. Tela de acesso e cadastro de novo usuário
 
@@ -163,11 +163,11 @@ S - Sair
 Opção: B
 
 Novo usuário
-E-mail (vazio para cancelar): ana@exemplo.com
-Nome completo: Ana Ribeiro Costa
-Senha: senha123
-Pergunta secreta: Qual o nome do meu primeiro animal de estimação?
-Resposta secreta: Rex
+E-mail (vazio para cancelar): lucas@teste.com
+Nome completo: Lucas José
+Senha: 12345678
+Pergunta secreta: Qual o seu animal favorito?
+Resposta secreta: Cachorro
 
 Usuário cadastrado com sucesso!
 ID do usuário: 1
@@ -178,24 +178,23 @@ o cadastro é interrompido:
 
 ```
 Novo usuário
-E-mail (vazio para cancelar): ana.costa@exemplo.com
+E-mail (vazio para cancelar): lucas@teste.com
 Este e-mail já está cadastrado.
 ```
 
-### 6.2. Login
+### 6.2. Login falhando
 
 ![Login](docs/img/02-login.png)
 
-Login com senha incorreta. O e-mail e a senha são pedidos e conferidos de uma
-só vez, e a mensagem é genérica de propósito, para não revelar se o que está
-errado é o e-mail ou a senha. Em seguida são oferecidas as opções de tentar
-novamente e de recuperar a senha:
+O e-mail e a senha são pedidos e conferidos de uma só vez, e a mensagem é
+genérica de propósito, para não revelar se o que está errado é o e-mail ou a
+senha. Em seguida vêm as opções de tentar novamente e de recuperar a senha:
 
 ```
 Login
 -----
-E-mail (vazio para cancelar): ana@exemplo.com
-Senha: senhaErrada
+E-mail (vazio para cancelar): lucas@teste.com
+Senha: 123
 
 Nome/e-mail ou senha incorretos.
 
@@ -206,69 +205,56 @@ R - Retornar
 Opção: _
 ```
 
-Login correto:
-
-```
-Login
------
-E-mail (vazio para cancelar): ana@exemplo.com
-Senha: senha123
-
-Login realizado com sucesso!
-Bem-vindo(a), Ana Ribeiro Costa!
-```
-
 ### 6.3. Recuperação de senha
 
 ![Recuperação de senha](docs/img/03-recuperar-senha.png)
 
-Com a resposta errada, a senha não é alterada:
+O sistema localiza o usuário pelo e-mail, apresenta a pergunta secreta que ele
+cadastrou e confere a resposta. Repare que a resposta cadastrada foi `Cachorro`
+e a digitada foi `CACHOrro`: a comparação é feita sobre o hash da resposta
+normalizada, então a caixa das letras não interfere — nem os acentos.
 
 ```
 Recuperar senha
 ---------------
-E-mail (vazio para cancelar): ana@exemplo.com
+E-mail (vazio para cancelar): lucas@teste.com
 
-Pergunta secreta: Qual o nome do meu primeiro animal de estimação?
-Resposta (vazio para cancelar): Bolinha
+Pergunta secreta: Qual o seu animal favorito?
+Resposta (vazio para cancelar): CACHOrro
+
+Nova senha (vazio para cancelar): 123
+Confirme a nova senha: 123
+
+Senha alterada com sucesso! Faça o login com a nova senha.
+```
+
+Se a resposta estiver errada, a senha não é alterada:
+
+```
+Resposta (vazio para cancelar): Gato
 
 Resposta incorreta. Não foi possível recuperar a senha.
 ```
 
-Com a resposta certa, a pessoa define uma nova senha e volta para o login. Note
-que a resposta foi digitada como `REX` e a cadastrada era `Rex`: a comparação
-ignora maiúsculas e acentos.
-
-```
-Recuperar senha
----------------
-E-mail (vazio para cancelar): ana@exemplo.com
-
-Pergunta secreta: Qual o nome do meu primeiro animal de estimação?
-Resposta (vazio para cancelar): REX
-
-Nova senha (vazio para cancelar): novaSenha456
-Confirme a nova senha: novaSenha456
-
-Senha alterada com sucesso! Faça o login com a nova senha.
-
-Login
------
-E-mail (vazio para cancelar): ana@exemplo.com
-Senha: novaSenha456
-
-Login realizado com sucesso!
-Bem-vindo(a), Ana Ribeiro Costa!
-```
-
-### 6.4. Menu principal e Minha área
+### 6.4. Login correto e menu principal
 
 ![Menu principal](docs/img/04-menu-principal.png)
 
+Depois da recuperação, o sistema volta sozinho para a tela de login:
+
 ```
+Login
+-----
+E-mail (vazio para cancelar): lucas@teste.com
+Senha: 123
+
+Login realizado com sucesso!
+Bem-vindo(a), Lucas José!
+
+
 AJUDA AÍ 1.0
 ------------
-Usuário: Ana Ribeiro Costa
+Usuário: Lucas José
 
 A - Minha área
 B - Buscar perguntas
@@ -284,7 +270,7 @@ C - Minhas respostas
 D - Meus votos
 R - Retornar
 
-Opção: B
+Opção: _
 ```
 
 ### 6.5. Meus dados — alteração de e-mail
@@ -294,8 +280,8 @@ Opção: B
 ```
 Meus dados
 ----------
-Nome: Ana Ribeiro Costa
-Email: ana@exemplo.com
+Nome: Lucas José
+Email: lucas@teste.com
 
 A - Alterar nome
 B - Alterar email
@@ -305,27 +291,18 @@ R - Retornar
 
 Opção: B
 
-Novo e-mail (vazio para cancelar): ana.costa@exemplo.com
+Novo e-mail (vazio para cancelar): lucas@teste2.com
 
 E-mail alterado com sucesso!
 
 Meus dados
 ----------
-Nome: Ana Ribeiro Costa
-Email: ana.costa@exemplo.com
+Nome: Lucas José
+Email: lucas@teste2.com
 ```
 
 E o login passa a funcionar com o novo e-mail, o que comprova que o índice
-indireto foi atualizado:
-
-```
-Login
------
-E-mail (vazio para cancelar): ana.costa@exemplo.com
-Senha: senha123
-
-Login realizado com sucesso!
-```
+indireto foi atualizado. O código responsável está explicado na seção 7.4.
 
 ### 6.6. Minhas perguntas — inclusão
 
@@ -344,11 +321,14 @@ Opcao: B
 
 Incluir pergunta
 ----------------
-Pergunta (vazio para cancelar): É seguro comer pão mofado, se você cortar a parte mofada fora?
-Palavras-chave (separadas por ;): pão;mofado;saúde
+Pergunta (vazio para cancelar): Qual sua cor favorita?
+Palavras-chave (separadas por ;): cor
 
 Pergunta cadastrada com sucesso!
 ```
+
+Só o texto e as palavras-chave são pedidos. O `idUsuario` vem de quem está
+logado, as datas vêm do relógio do sistema e a nota começa em zero.
 
 ### 6.7. Minhas perguntas — listagem
 
@@ -363,34 +343,28 @@ Minhas perguntas
 ----------------
 
 (1)
-19/09/2026 13:56
-É seguro comer pão mofado, se você cortar a parte mofada fora?
-Palavras-chave: pão;mofado;saúde
-
-(2)
-19/09/2026 13:56
-Para quem está começando a programar agora, qual a linguagem recomendada?
-Palavras-chave: programação;linguagem
-
-(3)
-19/09/2026 13:57
-Por que a luz azul das telas atrapalha o nosso sono?
-Palavras-chave: luz azul;sono
+21/09/2026 19:09
+Qual sua cor favorita?
+Palavras-chave: cor
 ```
 
 ### 6.8. Minhas perguntas — alteração
 
 ![Alterar pergunta](docs/img/08-alterar.png)
 
+O número digitado é o da tela; o sistema o converte para o ID real da pergunta.
+Campo deixado em branco não é alterado, e a data de alteração é ajustada
+automaticamente.
+
 ```
 Alterar pergunta
 ----------------
-Digite o número da pergunta que deseja alterar (0 para cancelar): 2
+Digite o número da pergunta que deseja alterar (0 para cancelar): 1
 
-Pergunta atual: Para quem está começando a programar agora, qual a linguagem recomendada?
-Nova pergunta (deixe vazio para não alterar): Para quem está começando a programar agora, qual linguagem é a mais recomendada?
-Palavras-chave atuais: programação;linguagem
-Novas palavras-chave (deixe vazio para não alterar):
+Pergunta atual: Qual sua cor favorita?
+Nova pergunta (deixe vazio para não alterar): Qual a sua comida favorita?
+Palavras-chave atuais: cor
+Novas palavras-chave (deixe vazio para não alterar): comida
 
 Pergunta alterada com sucesso!
 ```
@@ -402,9 +376,9 @@ Pergunta alterada com sucesso!
 ```
 Arquivar pergunta
 -----------------
-Digite o número da pergunta que deseja arquivar (0 para cancelar): 3
+Digite o número da pergunta que deseja arquivar (0 para cancelar): 1
 
-Pergunta: Por que a luz azul das telas atrapalha o nosso sono?
+Pergunta: Qual a sua comida favorita?
 Confirma o arquivamento desta pergunta? (S/N): S
 
 Pergunta arquivada com sucesso!
@@ -417,54 +391,42 @@ marcada, e some das buscas dos outros usuários:
 Minhas perguntas
 ----------------
 
-(1)
-19/09/2026 13:56
-É seguro comer pão mofado, se você cortar a parte mofada fora?
-Palavras-chave: pão;mofado;saúde
-
-(2)
-19/09/2026 13:56
-Para quem está começando a programar agora, qual linguagem é a mais recomendada?
-Palavras-chave: programação;linguagem
-
-(3) ARQUIVADA
-19/09/2026 13:57
-Por que a luz azul das telas atrapalha o nosso sono?
-Palavras-chave: luz azul;sono
+(1) ARQUIVADA
+21/09/2026 19:09
+Qual a sua comida favorita?
+Palavras-chave: comida
 ```
 
 ### 6.10. Buscar perguntas
 
 ![Buscar perguntas](docs/img/10-buscar.png)
 
-Note que a pergunta 3, arquivada, não aparece na busca:
+Para as telas seguintes, o usuário `Lucas José` cadastrou uma segunda pergunta,
+que permanece ativa, e um segundo usuário, `Maria Silva`, foi criado — ninguém
+pode responder ou votar de forma útil sozinho.
+
+A pergunta arquivada não aparece na busca:
 
 ```
 Buscar perguntas
 ----------------
 
 (1)
-19/09/2026 13:56
-É seguro comer pão mofado, se você cortar a parte mofada fora?
-Autor: Ana Ribeiro Costa
-Palavras-chave: pão;mofado;saúde
-
-(2)
-19/09/2026 13:56
-Para quem está começando a programar agora, qual linguagem é a mais recomendada?
-Autor: Ana Ribeiro Costa
+21/09/2026 19:23
+Qual a melhor linguagem para quem está começando a programar?
+Autor: Lucas José
 Palavras-chave: programação;linguagem
 
 Digite o número da pergunta para ver detalhes (0 para voltar): 1
 
 Detalhes da pergunta
---------------------
-Autor: Ana Ribeiro Costa
-Pergunta: É seguro comer pão mofado, se você cortar a parte mofada fora?
-Palavras-chave: pão;mofado;saúde
+-------------------
+Autor: Lucas José
+Pergunta: Qual a melhor linguagem para quem está começando a programar?
+Palavras-chave: programação;linguagem
 Nota: 0
-Criada em: 19/09/2026 13:56
-Alterada em: 19/09/2026 13:56
+Criada em: 21/09/2026 19:23
+Alterada em: 21/09/2026 19:23
 Status: Ativa
 ```
 
@@ -475,7 +437,7 @@ Status: Ativa
 ```
 Pergunta selecionada
 --------------------
-É seguro comer pão mofado, se você cortar a parte mofada fora?
+Qual a melhor linguagem para quem está começando a programar?
 
 A - Listar respostas
 B - Responder
@@ -486,23 +448,18 @@ Opção: B
 
 Responder pergunta
 -----------------
-Texto da resposta (vazio para cancelar): Não é seguro. O mofo espalha filamentos invisíveis por todo o pão, então o ideal é descartar a peça inteira.
+Texto da resposta (vazio para cancelar): Python é uma boa porta de entrada, porque a sintaxe é simples e você foca na lógica.
 
 Resposta cadastrada com sucesso!
 ```
 
 ```
-Votar em resposta
------------------
+Respostas
+--------
 
-1 - Não é seguro. O mofo espalha filamentos invisíveis por todo o pão, então o ideal é descartar a peça inteira.
-Autor: Bruno Alves Pinto
-Nota atual: 0
-
-Digite o número da resposta para votar (0 para cancelar): 1
-Valor do voto (+1 ou -1): 1
-
-Voto registrado com sucesso!
+1 - Python é uma boa porta de entrada, porque a sintaxe é simples e você foca na lógica.
+Autor: Maria Silva
+Nota: 0
 ```
 
 O sistema recusa voto repetido e voto no próprio conteúdo:
@@ -522,7 +479,7 @@ Você não pode votar na própria pergunta.
 Meus votos
 ----------
 
-1 - Voto em resposta: Não é seguro. O mofo espalha filamentos invisíveis por todo o pão, então o ideal é descartar a peça inteira.
+1 - Voto em pergunta: Qual a melhor linguagem para quem está começando a programar?
 Valor: 1
 ```
 
@@ -782,7 +739,7 @@ pontos exigidos:
 |---|---|---|
 | Cadastro de um novo usuário | `MenuAcesso.novoUsuario()` | 6.1 |
 | Login falhando e recuperação de senha | `MenuAcesso.login()`, `falhaNoLogin()`, `recuperarSenha()` | 6.2 e 6.3 |
-| Login correto | `MenuAcesso.login()` | 6.2 |
+| Login correto | `MenuAcesso.login()` | 6.4 |
 | Atualização do e-mail do usuário | `MenuUsuario.alterarEmail()`, `ArquivoUsuario.update()` | 6.5 |
 | Cadastro de uma pergunta | `MenuPerguntas.incluir()` | 6.6 |
 | Listagem de perguntas | `MenuPerguntas.listar()` | 6.7 |
