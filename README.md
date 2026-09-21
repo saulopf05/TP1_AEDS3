@@ -154,189 +154,55 @@ endereço no arquivo.
 
 ## 7. Telas do sistema
 
-Cada tela abaixo traz o print do terminal e, logo em seguida, o mesmo conteúdo
-em texto — assim é possível ler e buscar o conteúdo sem depender da imagem.
-
-Todas as capturas vêm de uma mesma execução, começando com o arquivo de dados
-vazio.
+Todas as capturas vêm de uma mesma sequência de uso, começando com o arquivo de
+dados vazio. Nas últimas telas entra um segundo usuário, `Maria Silva`, porque
+ninguém pode votar no próprio conteúdo.
 
 ### 7.1. Tela de acesso e cadastro de novo usuário
 
 ![Tela de acesso](docs/img/01-acesso.png)
 
-```
-AJUDA AÍ 1.0
-------------
-A - Login
-B - Novo usuário
-S - Sair
-
-Opção: B
-
-Novo usuário
-E-mail (vazio para cancelar): lucas@teste.com
-Nome completo: Lucas José
-Senha: 12345678
-Pergunta secreta: Qual o seu animal favorito?
-Resposta secreta: Cachorro
-
-Usuário cadastrado com sucesso!
-ID do usuário: 1
-```
-
-O e-mail é verificado antes de qualquer outro dado ser pedido. Se já existir,
-o cadastro é interrompido:
-
-```
-Novo usuário
-E-mail (vazio para cancelar): lucas@teste.com
-Este e-mail já está cadastrado.
-```
+O e-mail é verificado antes de qualquer outro dado ser pedido: se já estiver
+cadastrado, o sistema avisa e interrompe, porque dois usuários não podem
+compartilhar o mesmo e-mail. A senha e a resposta secreta não são gravadas — o
+que vai para o arquivo é o hash de cada uma.
 
 ### 7.2. Login falhando
 
 ![Login](docs/img/02-login.png)
 
-O e-mail e a senha são pedidos e conferidos de uma só vez, e a mensagem é
-genérica de propósito, para não revelar se o que está errado é o e-mail ou a
-senha. Em seguida vêm as opções de tentar novamente e de recuperar a senha:
-
-```
-Login
------
-E-mail (vazio para cancelar): lucas@teste.com
-Senha: 123
-
-Nome/e-mail ou senha incorretos.
-
-A - Tentar novamente
-B - Recuperar senha
-R - Retornar
-
-Opção: _
-```
+O e-mail e a senha são pedidos e conferidos de uma só vez, e a mensagem de erro
+é a mesma nos dois casos, de propósito: assim a tela não revela se o e-mail
+existe. Em seguida vêm as opções de tentar novamente e de recuperar a senha.
 
 ### 7.3. Recuperação de senha
 
 ![Recuperação de senha](docs/img/03-recuperar-senha.png)
 
-O sistema localiza o usuário pelo e-mail, apresenta a pergunta secreta que ele
-cadastrou e confere a resposta. Repare que a resposta cadastrada foi `Cachorro`
-e a digitada foi `CACHOrro`: a comparação é feita sobre o hash da resposta
-normalizada, então a caixa das letras não interfere — nem os acentos.
-
-```
-Recuperar senha
----------------
-E-mail (vazio para cancelar): lucas@teste.com
-
-Pergunta secreta: Qual o seu animal favorito?
-Resposta (vazio para cancelar): CACHOrro
-
-Nova senha (vazio para cancelar): 123
-Confirme a nova senha: 123
-
-Senha alterada com sucesso! Faça o login com a nova senha.
-```
-
-Se a resposta estiver errada, a senha não é alterada:
-
-```
-Resposta (vazio para cancelar): Gato
-
-Resposta incorreta. Não foi possível recuperar a senha.
-```
+O sistema localiza o usuário pelo e-mail, apresenta a pergunta secreta e confere
+a resposta. Repare que a resposta cadastrada foi `Cachorro` e a digitada foi
+`CACHOrro`: a comparação é feita sobre o hash da resposta normalizada, então a
+caixa das letras não interfere — nem os acentos. Conferida a resposta, a nova
+senha é pedida duas vezes e gravada. Com a resposta errada, nada é alterado.
 
 ### 7.4. Login correto e menu principal
 
 ![Menu principal](docs/img/04-menu-principal.png)
 
-Depois da recuperação, o sistema volta sozinho para a tela de login:
-
-```
-Login
------
-E-mail (vazio para cancelar): lucas@teste.com
-Senha: 123
-
-Login realizado com sucesso!
-Bem-vindo(a), Lucas José!
-
-
-AJUDA AÍ 1.0
-------------
-Usuário: Lucas José
-
-A - Minha área
-B - Buscar perguntas
-S - Sair
-
-Opção: A
-
-Minha área
-----------
-A - Meus dados
-B - Minhas perguntas
-C - Minhas respostas
-D - Meus votos
-R - Retornar
-
-Opção: _
-```
+Depois da recuperação, o sistema volta sozinho para a tela de login, e o acesso
+funciona com a senha recém-definida.
 
 ### 7.5. Meus dados — alteração de e-mail
 
 ![Meus dados](docs/img/05-meus-dados.png)
 
-```
-Meus dados
-----------
-Nome: Lucas José
-Email: lucas@teste.com
-
-A - Alterar nome
-B - Alterar email
-C - Alterar senha
-D - Alterar pergunta e resposta de recuperação
-R - Retornar
-
-Opção: B
-
-Novo e-mail (vazio para cancelar): lucas@teste2.com
-
-E-mail alterado com sucesso!
-
-Meus dados
-----------
-Nome: Lucas José
-Email: lucas@teste2.com
-```
-
-E o login passa a funcionar com o novo e-mail, o que comprova que o índice
-indireto foi atualizado. O código responsável está explicado na seção 8.4.
+O menu reexibe o dado já atualizado. O login passa a funcionar com o novo
+e-mail e deixa de funcionar com o antigo, o que comprova que o índice indireto
+foi corrigido junto — o código responsável está explicado na seção 8.4.
 
 ### 7.6. Minhas perguntas — inclusão
 
 ![Incluir pergunta](docs/img/06-incluir.png)
-
-```
-Minhas perguntas
-----------------
-A - Listar
-B - Incluir
-C - Alterar
-D - Arquivar
-R - Retornar
-
-Opcao: B
-
-Incluir pergunta
-----------------
-Pergunta (vazio para cancelar): Qual sua cor favorita?
-Palavras-chave (separadas por ;): cor
-
-Pergunta cadastrada com sucesso!
-```
 
 Só o texto e as palavras-chave são pedidos. O `idUsuario` vem de quem está
 logado, as datas vêm do relógio do sistema e a nota começa em zero.
@@ -347,17 +213,8 @@ logado, as datas vêm do relógio do sistema e a nota começa em zero.
 
 As perguntas são numeradas sequencialmente na tela, com a data e a hora de
 criação. Nem o ID da pergunta nem o ID do usuário aparecem, porque são dados de
-uso interno do sistema.
-
-```
-Minhas perguntas
-----------------
-
-(1)
-21/09/2026 19:09
-Qual sua cor favorita?
-Palavras-chave: cor
-```
+uso interno. A listagem não varre o arquivo: percorre a árvore B+ do par
+`(idUsuario; idPergunta)`.
 
 ### 7.8. Minhas perguntas — alteração
 
@@ -367,132 +224,46 @@ O número digitado é o da tela; o sistema o converte para o ID real da pergunta
 Campo deixado em branco não é alterado, e a data de alteração é ajustada
 automaticamente.
 
-```
-Alterar pergunta
-----------------
-Digite o número da pergunta que deseja alterar (0 para cancelar): 1
-
-Pergunta atual: Qual sua cor favorita?
-Nova pergunta (deixe vazio para não alterar): Qual a sua comida favorita?
-Palavras-chave atuais: cor
-Novas palavras-chave (deixe vazio para não alterar): comida
-
-Pergunta alterada com sucesso!
-```
-
 ### 7.9. Minhas perguntas — arquivamento
 
 ![Arquivar pergunta](docs/img/09-arquivar.png)
 
-```
-Arquivar pergunta
------------------
-Digite o número da pergunta que deseja arquivar (0 para cancelar): 1
-
-Pergunta: Qual a sua comida favorita?
-Confirma o arquivamento desta pergunta? (S/N): S
-
-Pergunta arquivada com sucesso!
-```
-
-Depois do arquivamento, a pergunta continua aparecendo para o autor, agora
-marcada, e some das buscas dos outros usuários:
-
-```
-Minhas perguntas
-----------------
-
-(1) ARQUIVADA
-21/09/2026 19:09
-Qual a sua comida favorita?
-Palavras-chave: comida
-```
+Depois de confirmado, a pergunta continua aparecendo para o autor, agora marcada
+com `ARQUIVADA`, e some das buscas dos outros usuários. Nenhum registro é
+apagado.
 
 ### 7.10. Buscar perguntas
 
 ![Buscar perguntas](docs/img/10-buscar.png)
 
-Para as telas seguintes, o usuário `Lucas José` cadastrou uma segunda pergunta,
-que permanece ativa, e um segundo usuário, `Maria Silva`, foi criado — ninguém
-pode responder ou votar de forma útil sozinho.
+A busca lista as perguntas ativas de todo o fórum, com o nome do autor — obtido
+pelo `idUsuario` da pergunta — e **não mostra a pergunta arquivada**. Os
+detalhes trazem a nota e as datas de criação e de alteração.
 
-A pergunta arquivada não aparece na busca:
+### 7.11. Respostas
 
-```
-Buscar perguntas
-----------------
+![Responder pergunta](docs/img/11-responder.png)
 
-(1)
-21/09/2026 19:23
-Qual a melhor linguagem para quem está começando a programar?
-Autor: Lucas José
-Palavras-chave: programação;linguagem
+A resposta é gravada com o `idPergunta` e o `idUsuario` de quem respondeu, e
+entra na árvore B+ do par `(idPergunta; idResposta)` na mesma operação.
 
-Digite o número da pergunta para ver detalhes (0 para voltar): 1
+![Listar respostas](docs/img/12-listar-respostas.png)
 
-Detalhes da pergunta
--------------------
-Autor: Lucas José
-Pergunta: Qual a melhor linguagem para quem está começando a programar?
-Palavras-chave: programação;linguagem
-Nota: 0
-Criada em: 21/09/2026 19:23
-Alterada em: 21/09/2026 19:23
-Status: Ativa
-```
+A listagem percorre essa árvore para trazer as respostas daquela pergunta, e
+mostra o autor e a nota de cada uma.
 
-### 7.11. Respostas e votos
+### 7.12. Votos
 
-![Respostas](docs/img/11-respostas.png)
+![Meus votos](docs/img/13-meus-votos.png)
 
-```
-Pergunta selecionada
---------------------
-Qual a melhor linguagem para quem está começando a programar?
+Cada voto é um registro próprio, o que permite saber quem votou em quê. Um voto
+em pergunta é gravado com `idResposta = -1`, o que distingue os dois tipos nesta
+listagem.
 
-A - Listar respostas
-B - Responder
-C - Votar na resposta
-R - Retornar
+![Validações de voto](docs/img/14-validacoes.png)
 
-Opção: B
-
-Responder pergunta
------------------
-Texto da resposta (vazio para cancelar): Python é uma boa porta de entrada, porque a sintaxe é simples e você foca na lógica.
-
-Resposta cadastrada com sucesso!
-```
-
-```
-Respostas
---------
-
-1 - Python é uma boa porta de entrada, porque a sintaxe é simples e você foca na lógica.
-Autor: Maria Silva
-Nota: 0
-```
-
-O sistema recusa voto repetido e voto no próprio conteúdo:
-
-```
-Você já votou nesta pergunta.
-```
-```
-Você não pode votar na própria pergunta.
-```
-
-### 7.12. Meus votos
-
-![Meus votos](docs/img/12-meus-votos.png)
-
-```
-Meus votos
-----------
-
-1 - Voto em pergunta: Qual a melhor linguagem para quem está começando a programar?
-Valor: 1
-```
+Antes de aceitar um voto, o sistema verifica que o usuário ainda não votou
+naquele conteúdo e que ele não é o autor.
 
 ---
 
