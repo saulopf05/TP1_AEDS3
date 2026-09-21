@@ -4,6 +4,7 @@ bin/
 
 # Configurações locais de IDE
 .vscode/
+.obsidian/
 .idea/
 *.iml
 
