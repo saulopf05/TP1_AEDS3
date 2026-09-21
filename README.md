@@ -16,7 +16,18 @@ genérico, a Tabela Hash Extensível e a Árvore B+ vistos em sala.
 
 ---
 
-## 2. Como compilar e executar
+## 2. Vídeo de demonstração
+
+[`Video/video_demonstração.mov`](Video/video_demonstração.mov) — 4min54s, captura
+de tela com narração, cobrindo as oito operações pedidas: cadastro de um novo
+usuário, login falhando com uso da recuperação de senha, login correto,
+atualização do e-mail do usuário, e o cadastro, a listagem, a alteração e o
+arquivamento de perguntas. O código-fonte responsável pela atualização de e-mail
+e pelo arquivamento é explicado durante o vídeo.
+
+---
+
+## 3. Como compilar e executar
 
 O projeto não usa nenhuma biblioteca externa nem ferramenta de build. Basta um
 JDK instalado (foi testado com o **JDK 26**, e não usa nenhum recurso posterior
@@ -41,7 +52,7 @@ relativa ao diretório de onde o programa for executado.
 
 ---
 
-## 3. O que o sistema faz
+## 4. O que o sistema faz
 
 O **AJUDA AÍ** é uma versão simplificada de fóruns como o StackOverflow. Cada
 pessoa se cadastra, faz login com e-mail e senha, publica perguntas, responde
@@ -67,7 +78,7 @@ continua visível apenas para o seu autor, marcada como `ARQUIVADA`.
 
 ---
 
-## 4. Organização do projeto
+## 5. Organização do projeto
 
 ```
 TP1_AEDS3/
@@ -84,7 +95,7 @@ TP1_AEDS3/
 └── README.md                       este relatório
 ```
 
-### 4.1. Classes criadas pelo grupo
+### 5.1. Classes criadas pelo grupo
 
 | Classe | Pacote | O que faz |
 |---|---|---|
@@ -108,7 +119,7 @@ TP1_AEDS3/
 | `Console` | `menus` | Entrada de teclado única, compartilhada por todos os menus. |
 | `Formato` | `menus` | Converte os milissegundos das entidades em data e hora legíveis. |
 
-### 4.2. Classes fornecidas pelo professor (pacote `aed3`)
+### 5.2. Classes fornecidas pelo professor (pacote `aed3`)
 
 Usadas sem alteração de lógica: `Arquivo`, `Registro`, `HashExtensivel`,
 `RegistroHashExtensivel`, `ArvoreBMais`, `InterfaceArvoreBMais` e
@@ -122,7 +133,7 @@ sistemas.
 
 ---
 
-## 5. Estrutura dos arquivos e dos índices
+## 6. Estrutura dos arquivos e dos índices
 
 Cada entidade tem o seu próprio arquivo, no formato do CRUD genérico: lápide de
 1 byte, indicador de tamanho de 2 bytes (`short`) e o vetor de bytes do
@@ -141,7 +152,7 @@ endereço no arquivo.
 
 ---
 
-## 6. Telas do sistema
+## 7. Telas do sistema
 
 Cada tela abaixo traz o print do terminal e, logo em seguida, o mesmo conteúdo
 em texto — assim é possível ler e buscar o conteúdo sem depender da imagem.
@@ -149,7 +160,7 @@ em texto — assim é possível ler e buscar o conteúdo sem depender da imagem.
 Todas as capturas vêm de uma mesma execução, começando com o arquivo de dados
 vazio.
 
-### 6.1. Tela de acesso e cadastro de novo usuário
+### 7.1. Tela de acesso e cadastro de novo usuário
 
 ![Tela de acesso](docs/img/01-acesso.png)
 
@@ -182,7 +193,7 @@ E-mail (vazio para cancelar): lucas@teste.com
 Este e-mail já está cadastrado.
 ```
 
-### 6.2. Login falhando
+### 7.2. Login falhando
 
 ![Login](docs/img/02-login.png)
 
@@ -205,7 +216,7 @@ R - Retornar
 Opção: _
 ```
 
-### 6.3. Recuperação de senha
+### 7.3. Recuperação de senha
 
 ![Recuperação de senha](docs/img/03-recuperar-senha.png)
 
@@ -236,7 +247,7 @@ Resposta (vazio para cancelar): Gato
 Resposta incorreta. Não foi possível recuperar a senha.
 ```
 
-### 6.4. Login correto e menu principal
+### 7.4. Login correto e menu principal
 
 ![Menu principal](docs/img/04-menu-principal.png)
 
@@ -273,7 +284,7 @@ R - Retornar
 Opção: _
 ```
 
-### 6.5. Meus dados — alteração de e-mail
+### 7.5. Meus dados — alteração de e-mail
 
 ![Meus dados](docs/img/05-meus-dados.png)
 
@@ -302,9 +313,9 @@ Email: lucas@teste2.com
 ```
 
 E o login passa a funcionar com o novo e-mail, o que comprova que o índice
-indireto foi atualizado. O código responsável está explicado na seção 7.4.
+indireto foi atualizado. O código responsável está explicado na seção 8.4.
 
-### 6.6. Minhas perguntas — inclusão
+### 7.6. Minhas perguntas — inclusão
 
 ![Incluir pergunta](docs/img/06-incluir.png)
 
@@ -330,7 +341,7 @@ Pergunta cadastrada com sucesso!
 Só o texto e as palavras-chave são pedidos. O `idUsuario` vem de quem está
 logado, as datas vêm do relógio do sistema e a nota começa em zero.
 
-### 6.7. Minhas perguntas — listagem
+### 7.7. Minhas perguntas — listagem
 
 ![Listar perguntas](docs/img/07-listar.png)
 
@@ -348,7 +359,7 @@ Qual sua cor favorita?
 Palavras-chave: cor
 ```
 
-### 6.8. Minhas perguntas — alteração
+### 7.8. Minhas perguntas — alteração
 
 ![Alterar pergunta](docs/img/08-alterar.png)
 
@@ -369,7 +380,7 @@ Novas palavras-chave (deixe vazio para não alterar): comida
 Pergunta alterada com sucesso!
 ```
 
-### 6.9. Minhas perguntas — arquivamento
+### 7.9. Minhas perguntas — arquivamento
 
 ![Arquivar pergunta](docs/img/09-arquivar.png)
 
@@ -397,7 +408,7 @@ Qual a sua comida favorita?
 Palavras-chave: comida
 ```
 
-### 6.10. Buscar perguntas
+### 7.10. Buscar perguntas
 
 ![Buscar perguntas](docs/img/10-buscar.png)
 
@@ -430,7 +441,7 @@ Alterada em: 21/09/2026 19:23
 Status: Ativa
 ```
 
-### 6.11. Respostas e votos
+### 7.11. Respostas e votos
 
 ![Respostas](docs/img/11-respostas.png)
 
@@ -471,7 +482,7 @@ Você já votou nesta pergunta.
 Você não pode votar na própria pergunta.
 ```
 
-### 6.12. Meus votos
+### 7.12. Meus votos
 
 ![Meus votos](docs/img/12-meus-votos.png)
 
@@ -485,9 +496,9 @@ Valor: 1
 
 ---
 
-## 7. Operações especiais implementadas
+## 8. Operações especiais implementadas
 
-### 7.1. Hash da senha e da resposta secreta
+### 8.1. Hash da senha e da resposta secreta
 
 A senha nunca é gravada em arquivo. `Usuario.gerarHash()` aplica **SHA-256** e
 converte o resultado para hexadecimal; o login compara hashes, nunca textos.
@@ -498,7 +509,7 @@ acentuação são removidas com a expressão `\p{M}` e tudo vira minúsculo. Ass
 `"São Paulo"`, `"sao paulo"` e `"SAO PAULO"` produzem o mesmo hash, e um
 acento esquecido na hora de recuperar a senha não impede o acesso.
 
-### 7.2. Recuperação de senha pela pergunta secreta
+### 8.2. Recuperação de senha pela pergunta secreta
 
 Como a senha só existe em forma de hash, não há como devolvê-la ao usuário. A
 recuperação, então, redefine a senha depois de conferir a resposta secreta.
@@ -517,7 +528,7 @@ if(!Usuario.gerarHashResposta(resposta).equals(usuario.hashRespostaSecreta)) {
 ```
 
 A comparação passa pelo mesmo `gerarHashResposta()` do cadastro, então a
-normalização descrita em 7.1 vale aqui: quem cadastrou `"Rex"` consegue entrar
+normalização descrita em 8.1 vale aqui: quem cadastrou `"Rex"` consegue entrar
 digitando `"REX"` ou `"rex"`, e um acento esquecido não bloqueia o acesso.
 Conferida a resposta, a nova senha é pedida duas vezes, tem o hash gerado e é
 gravada com `arqUsuarios.update()`. O usuário volta direto para a tela de login.
@@ -528,7 +539,7 @@ recusado sem que a senha fosse sequer pedida, o que revelava quais e-mails estã
 cadastrados. Agora os dois são conferidos de uma só vez e a mensagem de erro é a
 mesma nos dois casos, como o enunciado determina.
 
-### 7.3. Datas de criação e de alteração
+### 8.3. Datas de criação e de alteração
 
 As entidades guardam data e hora como `long` em milissegundos, conforme o
 enunciado. Esse formato não serve para leitura, então toda tela que mostra uma
@@ -546,7 +557,7 @@ A data de criação aparece acima de cada pergunta nas duas listagens, *Minhas
 perguntas* e *Buscar perguntas*, e a tela de detalhes mostra as duas datas, o
 que permite ver quando uma pergunta foi editada pela última vez.
 
-### 7.4. Índice indireto de e-mail em Tabela Hash Extensível
+### 8.4. Índice indireto de e-mail em Tabela Hash Extensível
 
 `ArquivoUsuario` mantém uma `HashExtensivel<ParEmailID>` que relaciona o e-mail
 ao `idUsuario`. É ela que permite o login — a busca é pelo e-mail, mas o
@@ -571,7 +582,7 @@ Como a Tabela Hash Extensível exige registros de tamanho fixo, `ParEmailID`
 grava o e-mail em um bloco fixo de 100 bytes, completado com zeros, mais 4
 bytes do ID — 104 bytes por entrada.
 
-### 7.5. Árvore B+ do relacionamento 1:N entre usuários e perguntas
+### 8.5. Árvore B+ do relacionamento 1:N entre usuários e perguntas
 
 Este é o relacionamento central do trabalho. A chave estrangeira `idUsuario`
 dentro de `Pergunta` resolve o caminho *pergunta → autor*. Para o caminho
@@ -597,7 +608,7 @@ justamente o que caracteriza o relacionamento 1:N.
 O mesmo padrão se repete em `ArquivoResposta`, com o par
 `(idPergunta; idResposta)`, e em `ArquivoVoto`, com o par `(idUsuario; idVoto)`.
 
-### 7.6. Arquivamento no lugar da exclusão
+### 8.6. Arquivamento no lugar da exclusão
 
 Perguntas não são apagadas. O campo `boolean ativa` passa a `false` e a data de
 alteração é atualizada. O arquivamento é definitivo: não existe opção de
@@ -611,7 +622,7 @@ desarquivar em nenhum menu. Uma pergunta arquivada:
 Isso preserva as respostas e os votos que outras pessoas já deixaram, que é
 exatamente o motivo pelo qual o enunciado pede arquivamento em vez de exclusão.
 
-### 7.7. Mapeamento entre número de tela e ID real
+### 8.7. Mapeamento entre número de tela e ID real
 
 Os IDs são internos e não devem aparecer para o usuário. Mas a interface é
 textual e a pessoa precisa de alguma forma indicar sobre qual pergunta quer
@@ -627,7 +638,7 @@ Pergunta p = arqPerguntas.read(idReal);
 O mesmo recurso é usado em `MenuUsuario.buscarPerguntas()` e em
 `MenuResposta.votarResposta()`.
 
-### 7.8. Votação com nota acumulada
+### 8.8. Votação com nota acumulada
 
 Um voto vale `+1` ou `-1` e é gravado como um registro próprio na entidade
 `Voto`, o que permite auditar quem votou em quê. A nota da pergunta ou da
@@ -644,7 +655,7 @@ Duas regras são verificadas antes de aceitar um voto:
 Um voto em pergunta é gravado com `idResposta = -1`, o que distingue os dois
 tipos de voto na listagem de **Meus votos**.
 
-### 7.9. Reuso do espaço de registros excluídos
+### 8.9. Reuso do espaço de registros excluídos
 
 Herdado de `aed3.Arquivo` e ativo em todos os CRUDs. O cabeçalho do arquivo
 mantém uma lista encadeada de espaços livres, ordenada por tamanho
@@ -656,7 +667,7 @@ antigo, ele é sobrescrito no lugar; se não couber, o espaço antigo entra na
 lista de livres, o registro é gravado em outro ponto e o índice direto é
 atualizado com o novo endereço.
 
-### 7.10. Entrada de teclado única
+### 8.10. Entrada de teclado única
 
 Cada menu tinha o seu próprio `Scanner` sobre o `System.in`. Como cada
 `Scanner` lê um bloco inteiro da entrada para o seu buffer interno, as linhas
@@ -665,7 +676,7 @@ os menus agora compartilham a mesma instância, em `menus.Console`.
 
 ---
 
-## 8. Checklist
+## 9. Checklist
 
 > **Há um CRUD de usuários (que estende a classe Arquivo, acrescentando Tabelas
 > Hash Extensíveis e Árvores B+ como índices diretos e indiretos conforme
@@ -725,26 +736,26 @@ alimenta a tela **Minhas perguntas**.
 
 > **O trabalho compila corretamente?**
 
-**Sim.** Compila sem nenhum erro e sem nenhum aviso, com o comando da seção 2
+**Sim.** Compila sem nenhum erro e sem nenhum aviso, com o comando da seção 3
 deste relatório. Foi verificado com o JDK 26 em Linux.
 
 > **O trabalho está completo e funcionando sem erros de execução?**
 
 **Sim.** Todas as operações pedidas para esta etapa estão implementadas e
-funcionam sem nenhuma exceção em tempo de execução. As seções 6.1 a 6.12 deste
+funcionam sem nenhuma exceção em tempo de execução. As seções 7.1 a 7.12 deste
 relatório são capturas reais de uma execução completa, e cobrem exatamente os
 pontos exigidos:
 
 | Operação exigida | Onde está | Tela |
 |---|---|---|
-| Cadastro de um novo usuário | `MenuAcesso.novoUsuario()` | 6.1 |
-| Login falhando e recuperação de senha | `MenuAcesso.login()`, `falhaNoLogin()`, `recuperarSenha()` | 6.2 e 6.3 |
-| Login correto | `MenuAcesso.login()` | 6.4 |
-| Atualização do e-mail do usuário | `MenuUsuario.alterarEmail()`, `ArquivoUsuario.update()` | 6.5 |
-| Cadastro de uma pergunta | `MenuPerguntas.incluir()` | 6.6 |
-| Listagem de perguntas | `MenuPerguntas.listar()` | 6.7 |
-| Atualização de uma pergunta | `MenuPerguntas.alterar()` | 6.8 |
-| Arquivamento de uma pergunta | `MenuPerguntas.arquivar()` | 6.9 |
+| Cadastro de um novo usuário | `MenuAcesso.novoUsuario()` | 7.1 |
+| Login falhando e recuperação de senha | `MenuAcesso.login()`, `falhaNoLogin()`, `recuperarSenha()` | 7.2 e 7.3 |
+| Login correto | `MenuAcesso.login()` | 7.4 |
+| Atualização do e-mail do usuário | `MenuUsuario.alterarEmail()`, `ArquivoUsuario.update()` | 7.5 |
+| Cadastro de uma pergunta | `MenuPerguntas.incluir()` | 7.6 |
+| Listagem de perguntas | `MenuPerguntas.listar()` | 7.7 |
+| Atualização de uma pergunta | `MenuPerguntas.alterar()` | 7.8 |
+| Arquivamento de uma pergunta | `MenuPerguntas.arquivar()` | 7.9 |
 
 Além do exigido, também estão funcionando as respostas, os votos em perguntas e
 em respostas, e as telas *Minhas respostas* e *Meus votos*, que adiantam parte
@@ -756,8 +767,8 @@ aviso, e a execução vai do cadastro ao voto sem nenhuma exceção.
 
 > **O trabalho é original e não a cópia de um trabalho de outro grupo?**
 
-**Sim.** Todo o código das classes listadas na seção 4.1 foi escrito pelo grupo.
+**Sim.** Todo o código das classes listadas na seção 5.1 foi escrito pelo grupo.
 As classes do pacote `aed3` são as fornecidas pelo professor, usadas conforme o
 enunciado determina, e a única alteração que fizemos nelas está documentada na
-seção 4.2. O histórico de commits do repositório mostra a evolução do trabalho e
+seção 5.2. O histórico de commits do repositório mostra a evolução do trabalho e
 a contribuição de cada participante.
