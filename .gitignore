@@ -6,3 +6,6 @@ bin/
 .vscode/
 .idea/
 *.iml
+
+# Material de apoio do grupo, fora da entrega
+docs/roteiro-video.md
